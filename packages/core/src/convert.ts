@@ -1,10 +1,15 @@
-import { basename, dirname, extname, join } from 'node:path'
+import { ConvertError } from './errors.ts'
+import { convertWithFfmpeg } from './engines/ffmpeg.ts'
+import { convertWithPdf } from './engines/pdf.ts'
+import { convertWithSharp } from './engines/sharp.ts'
 import {
   type SupportedFormat,
   FORMATS,
+  canConvert,
   formatFromPath,
   normalizeFormat,
 } from './formats.ts'
+import { outputPathFor } from './path.ts'
 
 export interface ConvertOptions {
   input: string
@@ -23,26 +28,14 @@ export interface ConvertResult {
   elapsedMs: number
 }
 
-export class ConvertError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'ConvertError'
-  }
-}
+export { ConvertError }
 
-function outputPathFor(input: string, to: SupportedFormat, explicit?: string) {
-  if (explicit) return explicit
-  const ext = to === 'jpeg' || to === 'jpg' ? '.jpg' : `.${to}`
-  return join(dirname(input), `${basename(input, extname(input))}${ext}`)
-}
-
-async function loadSharp() {
-  try {
-    return (await import('sharp')).default
-  } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error)
-    throw new ConvertError(`image engine unavailable: ${detail}`)
+function pickEngine(from: SupportedFormat, to: SupportedFormat) {
+  if (from === 'pdf' || to === 'pdf') return 'pdf' as const
+  if (FORMATS[from].engine === 'ffmpeg' || FORMATS[to].engine === 'ffmpeg') {
+    return 'ffmpeg' as const
   }
+  return 'sharp' as const
 }
 
 export async function convert(options: ConvertOptions): Promise<ConvertResult> {
@@ -59,8 +52,8 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
 
   const to = normalizeFormat(options.to)
   if (!to) throw new ConvertError(`unsupported target format: ${options.to}`)
-  if (!FORMATS[to].encode) {
-    throw new ConvertError(`${to} is decode-only; pick an encodeable format`)
+  if (!canConvert(from, to)) {
+    throw new ConvertError(`cannot convert ${from} → ${to}`)
   }
 
   const quality = options.quality ?? 82
@@ -68,20 +61,30 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
     throw new ConvertError('quality must be between 1 and 100')
   }
 
-  const sharp = await loadSharp()
-  let pipeline = sharp(options.input, { failOn: 'none' }).rotate()
-  if (to === 'png') pipeline = pipeline.png()
-  else if (to === 'jpeg' || to === 'jpg') {
-    pipeline = pipeline.jpeg({ quality, mozjpeg: true })
-  } else if (to === 'webp') pipeline = pipeline.webp({ quality })
-  else if (to === 'avif') pipeline = pipeline.avif({ quality })
-  else if (to === 'tiff') pipeline = pipeline.tiff({ quality })
-  else if (to === 'gif') pipeline = pipeline.gif()
-  else throw new ConvertError(`${to} is decode-only`)
-
-  const buffer = await pipeline.toBuffer()
   const output = outputPathFor(options.input, to, options.output)
-  await Bun.write(output, buffer)
+  const engine = pickEngine(from, to)
+  if (engine === 'pdf') {
+    await convertWithPdf({ input: options.input, output, from, to, quality })
+  } else if (engine === 'ffmpeg') {
+    await convertWithFfmpeg({
+      input: options.input,
+      output,
+      to,
+      quality,
+    })
+  } else {
+    await convertWithSharp({
+      input: options.input,
+      output,
+      to,
+      quality,
+    })
+  }
+
+  const outFile = Bun.file(output)
+  if (!(await outFile.exists())) {
+    throw new ConvertError('conversion produced no output file')
+  }
 
   return {
     input: options.input,
@@ -89,7 +92,7 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
     from,
     to,
     bytesIn: inputFile.size,
-    bytesOut: buffer.byteLength,
+    bytesOut: outFile.size,
     elapsedMs: Math.round((performance.now() - started) * 100) / 100,
   }
 }

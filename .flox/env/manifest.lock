@@ -10,12 +10,20 @@
         "pkg-path": "bun",
         "version": "1.3.13"
       },
+      "ffmpeg": {
+        "pkg-path": "ffmpeg",
+        "pkg-group": "engines"
+      },
       "gh": {
         "pkg-path": "gh"
       },
       "git": {
         "pkg-path": "git",
         "outputs": "all"
+      },
+      "poppler_utils": {
+        "pkg-path": "poppler_utils",
+        "pkg-group": "engines"
       },
       "pre-commit": {
         "pkg-path": "pre-commit",
@@ -39,6 +47,286 @@
     }
   },
   "packages": [
+    {
+      "attr_path": "ffmpeg",
+      "broken": false,
+      "derivation": "/nix/store/m5myvc0cyzazv12021d5fkaj0g3fh5kh-ffmpeg-7.1.1.drv",
+      "description": "Complete, cross-platform solution to record, convert and stream audio and video",
+      "install_id": "ffmpeg",
+      "license": "[ LGPL-2.1-or-later, GPL-2.0-or-later, LGPL-3.0-or-later, GPL-3.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "ffmpeg-7.1.1",
+      "pname": "ffmpeg",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T01:11:54.940467Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "7.1.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/rj8rc9xdxjnm1r4v8x8bx836hycnh1ji-ffmpeg-7.1.1-bin",
+        "data": "/nix/store/ignqq1wxz4syvdf8hgccdm8fz9jvi4dg-ffmpeg-7.1.1-data",
+        "dev": "/nix/store/c1qi0f6bk3hgb9x4qci0pxyv1frqf2n1-ffmpeg-7.1.1-dev",
+        "doc": "/nix/store/c3fhrzv7v419x6zlqj62vmnml9wjy45l-ffmpeg-7.1.1-doc",
+        "lib": "/nix/store/lr52n7klvwgh40w6bl48grdwd8nxdab5-ffmpeg-7.1.1-lib",
+        "man": "/nix/store/6z1yjldf0bqx47w1afa7ybbkbgsiwpzm-ffmpeg-7.1.1-man",
+        "out": "/nix/store/h5i8jksc3zwva0naf1jh6yixqkdvkrx0-ffmpeg-7.1.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "ffmpeg",
+      "broken": false,
+      "derivation": "/nix/store/fg96hpg8xigcayll8xyg4h5359wk6wnj-ffmpeg-7.1.1.drv",
+      "description": "Complete, cross-platform solution to record, convert and stream audio and video",
+      "install_id": "ffmpeg",
+      "license": "[ LGPL-2.1-or-later, GPL-2.0-or-later, LGPL-3.0-or-later, GPL-3.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "ffmpeg-7.1.1",
+      "pname": "ffmpeg",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T01:48:38.063421Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "7.1.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/722f20yjxl4b1gc4ysinplk7ci9kiycs-ffmpeg-7.1.1-bin",
+        "data": "/nix/store/w7j0a22wgf03chakwyh84nyaab5xy6p4-ffmpeg-7.1.1-data",
+        "dev": "/nix/store/aq6wlwphd8ls717kayq377zzjwi2cgw4-ffmpeg-7.1.1-dev",
+        "doc": "/nix/store/rwjfxd8yfrfgiw3fch5g83d1470k00wi-ffmpeg-7.1.1-doc",
+        "lib": "/nix/store/gsf49h4108j94bgmbpma292whcj3p9ab-ffmpeg-7.1.1-lib",
+        "man": "/nix/store/bhx6g24ak4n92439w0z5mk7hl1j2v9m6-ffmpeg-7.1.1-man",
+        "out": "/nix/store/r23sps56pjmy52zaih7sqj7ng8yc8zil-ffmpeg-7.1.1"
+      },
+      "system": "aarch64-linux",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "ffmpeg",
+      "broken": false,
+      "derivation": "/nix/store/8s6ncxjp3k0nrzq0038bvw3br6fsy9r7-ffmpeg-7.1.1.drv",
+      "description": "Complete, cross-platform solution to record, convert and stream audio and video",
+      "install_id": "ffmpeg",
+      "license": "[ LGPL-2.1-or-later, GPL-2.0-or-later, LGPL-3.0-or-later, GPL-3.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "ffmpeg-7.1.1",
+      "pname": "ffmpeg",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T02:21:44.464224Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "7.1.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/n717n0cni23bkqc38w0vqbdnyy3r9gg8-ffmpeg-7.1.1-bin",
+        "data": "/nix/store/rmr9z6yxqqb03997mmslshn64pjvarb1-ffmpeg-7.1.1-data",
+        "dev": "/nix/store/vahd3b6703dcl8agsybp6kni07adyml8-ffmpeg-7.1.1-dev",
+        "doc": "/nix/store/4hfy7jpd14x6wj1kpnpjm6kcdlbkh0gr-ffmpeg-7.1.1-doc",
+        "lib": "/nix/store/7k5mpw0d7z0jpq4shkvpnn0hpr2dfhj7-ffmpeg-7.1.1-lib",
+        "man": "/nix/store/kd6ia55hp9h71dm56fjgmf8gv81wl8c3-ffmpeg-7.1.1-man",
+        "out": "/nix/store/d6bwhwq7bi1a1vvq2hv246dfy3wcn1hk-ffmpeg-7.1.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "ffmpeg",
+      "broken": false,
+      "derivation": "/nix/store/z9vqsi7r38c9jvrx1r0l9nq8jpqn3v54-ffmpeg-7.1.1.drv",
+      "description": "Complete, cross-platform solution to record, convert and stream audio and video",
+      "install_id": "ffmpeg",
+      "license": "[ LGPL-2.1-or-later, GPL-2.0-or-later, LGPL-3.0-or-later, GPL-3.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "ffmpeg-7.1.1",
+      "pname": "ffmpeg",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T02:58:38.011337Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "7.1.1",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/vrm3jg8hjkkfdsqagk18xbcig0m9saca-ffmpeg-7.1.1-bin",
+        "data": "/nix/store/9711h56a87604k1pq5bfvrvslwqqd1mb-ffmpeg-7.1.1-data",
+        "dev": "/nix/store/ffd05fd1mkprx1phcw603rvcnk75jb2m-ffmpeg-7.1.1-dev",
+        "doc": "/nix/store/mxjl8nf4l10zg11kvayjzj6123bx4bxy-ffmpeg-7.1.1-doc",
+        "lib": "/nix/store/8dp4klblj660a9qv51903zzczv27k4l9-ffmpeg-7.1.1-lib",
+        "man": "/nix/store/iavrhhcp6miidhlijqjbd7pr4wfpdkcv-ffmpeg-7.1.1-man",
+        "out": "/nix/store/fvisr8lx4ajs8m31zwmv1ab2x9ipx7p1-ffmpeg-7.1.1"
+      },
+      "system": "x86_64-linux",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "poppler_utils",
+      "broken": false,
+      "derivation": "/nix/store/i0v7x5w1r13ba4sj354xbk71pasf4ks5-poppler-utils-25.07.0.drv",
+      "description": "PDF rendering library",
+      "install_id": "poppler_utils",
+      "license": "[ GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "poppler-utils-25.07.0",
+      "pname": "poppler_utils",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T01:12:30.549535Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.07.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/sd1r33z9wwssbwkimqlfih6jkvg5ihv3-poppler-utils-25.07.0-dev",
+        "out": "/nix/store/1d9c58v4klvbz3d4p0g3lxcqrbqaikay-poppler-utils-25.07.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "poppler_utils",
+      "broken": false,
+      "derivation": "/nix/store/hmd9hkvh2rfp4r5s3qay7xldhq1nar59-poppler-utils-25.07.0.drv",
+      "description": "PDF rendering library",
+      "install_id": "poppler_utils",
+      "license": "[ GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "poppler-utils-25.07.0",
+      "pname": "poppler_utils",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T01:49:32.043231Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.07.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/zqx4lr7gap668plpilwi9g6szn82akh1-poppler-utils-25.07.0-dev",
+        "out": "/nix/store/bmyknqhv3p4pq5g3klrlnxp2zr60gvaa-poppler-utils-25.07.0"
+      },
+      "system": "aarch64-linux",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "poppler_utils",
+      "broken": false,
+      "derivation": "/nix/store/isx8ili2prscla9in61r69v4dadsv5z0-poppler-utils-25.07.0.drv",
+      "description": "PDF rendering library",
+      "install_id": "poppler_utils",
+      "license": "[ GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "poppler-utils-25.07.0",
+      "pname": "poppler_utils",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T02:22:23.542252Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.07.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/bzpd854k47z971dfh7h3ygrgfpc754hc-poppler-utils-25.07.0-dev",
+        "out": "/nix/store/vmpxv0d5wa2434xdpcc6vk4mjc894vmr-poppler-utils-25.07.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "engines",
+      "priority": 5
+    },
+    {
+      "attr_path": "poppler_utils",
+      "broken": false,
+      "derivation": "/nix/store/v6wrbkikd1580chhdwjsmwpqnqpdivj5-poppler-utils-25.07.0.drv",
+      "description": "PDF rendering library",
+      "install_id": "poppler_utils",
+      "license": "[ GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "name": "poppler-utils-25.07.0",
+      "pname": "poppler_utils",
+      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+      "rev_count": 882227,
+      "rev_date": "2025-10-22T06:30:52Z",
+      "scrape_date": "2025-10-24T02:59:38.485059Z",
+      "stabilities": [
+        "stable",
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.07.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/8k7wsrfszf92vw771z0jqrl4khk84xlc-poppler-utils-25.07.0-dev",
+        "out": "/nix/store/ir1vajffz7icwrji4fklhlbqxdd8bgjq-poppler-utils-25.07.0"
+      },
+      "system": "x86_64-linux",
+      "group": "engines",
+      "priority": 5
+    },
     {
       "attr_path": "actionlint",
       "broken": false,

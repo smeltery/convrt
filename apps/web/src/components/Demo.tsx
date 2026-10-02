@@ -133,11 +133,14 @@ export function ConversionDemo() {
 export function Formats() {
   return (
     <section className="shell formats" id="formats">
-      <h2>Images first. More formats next.</h2>
+      <h2>Images, video, audio, and PDF.</h2>
       <p>
-        HEIC, PNG, JPEG, WebP, AVIF, TIFF, and GIF convert on-device today.
-        Video, audio, and PDF pipelines are documented in{' '}
-        <a href="https://github.com/smeltery/convrt/tree/main/docs">docs/</a>.
+        Sharp handles stills. ffmpeg covers video and audio. Poppler plus a lean
+        PDF writer cover image ↔ PDF. Everything runs on-device — see{' '}
+        <a href="https://github.com/smeltery/convrt/tree/main/docs/formats">
+          formats
+        </a>
+        .
       </p>
     </section>
   )

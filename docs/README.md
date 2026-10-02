@@ -17,7 +17,7 @@ flowchart LR
 | Guide | Audience |
 | --- | --- |
 | [Getting started](getting-started/README.md) | New users and contributors |
-| [Formats](formats/README.md) | Supported and planned formats |
+| [Formats](formats/README.md) | Supported formats and engines |
 | [macOS Quick Action](macos/README.md) | Right-click integration |
 | [Architecture](architecture/README.md) | How conversion is wired |
 | [Operations](operations/README.md) | CI, Flox, pre-commit, releases |

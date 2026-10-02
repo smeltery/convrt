@@ -9,12 +9,16 @@ flox activate
 bun install --frozen-lockfile
 ```
 
-Without Flox, install [Bun](https://bun.sh/) 1.3 and [pre-commit](https://pre-commit.com/).
+Without Flox, install [Bun](https://bun.sh/) 1.3, [pre-commit](https://pre-commit.com/),
+[ffmpeg](https://ffmpeg.org/), and [poppler](https://poppler.freedesktop.org/)
+(`pdftoppm`).
 
 ## Convert a file
 
 ```sh
 bun run apps/cli/src/cli.ts sample.png --to webp
+bun run apps/cli/src/cli.ts clip.mp4 --to mp3
+bun run apps/cli/src/cli.ts slide.pdf --to png
 bun run apps/cli/src/cli.ts formats
 ```
 

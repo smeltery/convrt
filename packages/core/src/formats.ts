@@ -1,4 +1,6 @@
 export type FormatFamily = 'image' | 'video' | 'audio' | 'document'
+export type EngineName = 'sharp' | 'ffmpeg' | 'pdf'
+
 export type SupportedFormat =
   | 'png'
   | 'jpeg'
@@ -9,43 +11,65 @@ export type SupportedFormat =
   | 'gif'
   | 'heic'
   | 'heif'
+  | 'mp4'
+  | 'mov'
+  | 'webm'
+  | 'mkv'
+  | 'mp3'
+  | 'aac'
+  | 'm4a'
+  | 'wav'
+  | 'flac'
+  | 'ogg'
+  | 'pdf'
 
 export interface FormatInfo {
   id: SupportedFormat
   family: FormatFamily
   extensions: string[]
   mime: string
-  engine: 'sharp'
+  engine: EngineName
   status: 'ready' | 'planned'
   encode: boolean
 }
 
-type Row = [SupportedFormat, string[], string, boolean]
+/** id, family, extensions, mime, encode, engine */
+type Row = [
+  SupportedFormat,
+  FormatFamily,
+  string[],
+  string,
+  boolean,
+  EngineName,
+]
 
-const IMAGE: Row[] = [
-  ['png', ['.png'], 'image/png', true],
-  ['jpeg', ['.jpeg', '.jpg'], 'image/jpeg', true],
-  ['jpg', ['.jpg', '.jpeg'], 'image/jpeg', true],
-  ['webp', ['.webp'], 'image/webp', true],
-  ['avif', ['.avif'], 'image/avif', true],
-  ['tiff', ['.tiff', '.tif'], 'image/tiff', true],
-  ['gif', ['.gif'], 'image/gif', true],
-  ['heic', ['.heic'], 'image/heic', false],
-  ['heif', ['.heif'], 'image/heif', false],
+const ROWS: Row[] = [
+  ['png', 'image', ['.png'], 'image/png', true, 'sharp'],
+  ['jpeg', 'image', ['.jpeg', '.jpg'], 'image/jpeg', true, 'sharp'],
+  ['jpg', 'image', ['.jpg', '.jpeg'], 'image/jpeg', true, 'sharp'],
+  ['webp', 'image', ['.webp'], 'image/webp', true, 'sharp'],
+  ['avif', 'image', ['.avif'], 'image/avif', true, 'sharp'],
+  ['tiff', 'image', ['.tiff', '.tif'], 'image/tiff', true, 'sharp'],
+  ['gif', 'image', ['.gif'], 'image/gif', true, 'sharp'],
+  ['heic', 'image', ['.heic'], 'image/heic', false, 'sharp'],
+  ['heif', 'image', ['.heif'], 'image/heif', false, 'sharp'],
+  ['mp4', 'video', ['.mp4'], 'video/mp4', true, 'ffmpeg'],
+  ['mov', 'video', ['.mov'], 'video/quicktime', true, 'ffmpeg'],
+  ['webm', 'video', ['.webm'], 'video/webm', true, 'ffmpeg'],
+  ['mkv', 'video', ['.mkv'], 'video/x-matroska', true, 'ffmpeg'],
+  ['mp3', 'audio', ['.mp3'], 'audio/mpeg', true, 'ffmpeg'],
+  ['aac', 'audio', ['.aac'], 'audio/aac', true, 'ffmpeg'],
+  ['m4a', 'audio', ['.m4a'], 'audio/mp4', true, 'ffmpeg'],
+  ['wav', 'audio', ['.wav'], 'audio/wav', true, 'ffmpeg'],
+  ['flac', 'audio', ['.flac'], 'audio/flac', true, 'ffmpeg'],
+  ['ogg', 'audio', ['.ogg'], 'audio/ogg', true, 'ffmpeg'],
+  ['pdf', 'document', ['.pdf'], 'application/pdf', true, 'pdf'],
 ]
 
 export const FORMATS = Object.fromEntries(
-  IMAGE.map(([id, extensions, mime, encode]) => [
+  ROWS.map(([id, family, extensions, mime, encode, engine]) => [
     id,
-    {
-      id,
-      family: 'image',
-      extensions,
-      mime,
-      engine: 'sharp',
-      status: 'ready',
-      encode,
-    },
+    { id, family, extensions, mime, engine, status: 'ready', encode },
   ]),
 ) as Record<SupportedFormat, FormatInfo>
 
@@ -68,4 +92,20 @@ export function normalizeFormat(input: string): SupportedFormat | null {
 
 export function listReadyFormats(): FormatInfo[] {
   return Object.values(FORMATS).filter((f) => f.status === 'ready')
+}
+
+/** True when this pair is a supported offline conversion. */
+export function canConvert(
+  from: SupportedFormat,
+  to: SupportedFormat,
+): boolean {
+  if (from === to) return false
+  if (!FORMATS[to].encode) return false
+  const a = FORMATS[from].family
+  const b = FORMATS[to].family
+  if (a === b) return true
+  if (a === 'video' && (b === 'audio' || b === 'image')) return true
+  if (a === 'document' && b === 'image') return true
+  if (a === 'image' && to === 'pdf') return true
+  return false
 }

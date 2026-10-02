@@ -1,35 +1,41 @@
 # Formats
 
-Image conversion ships today via [sharp](https://sharp.pixelplumbing.com/)
-(libvips). Video, audio, and PDF are planned and tracked here so the product
-story stays honest.
+Conversion stays offline. Engines are selected by format family:
+
+| Family | Engine | Role |
+| --- | --- | --- |
+| Image | [sharp](https://sharp.pixelplumbing.com/) (libvips) | Decode/encode stills |
+| Video / audio | [ffmpeg](https://ffmpeg.org/) | Remux/transcode AV |
+| PDF | [poppler](https://poppler.freedesktop.org/) `pdftoppm` + JPEG-in-PDF | First page ↔ image |
 
 ## Ready now
 
-| Format | Decode | Encode | Notes |
+| Format | Family | Decode | Encode |
 | --- | --- | --- | --- |
-| HEIC / HEIF | yes | no | Common iPhone camera output |
-| PNG | yes | yes | Lossless |
-| JPEG / JPG | yes | yes | MozJPEG encode |
-| WebP | yes | yes | Default Quick Action target |
-| AVIF | yes | yes | Smaller, slower encode |
-| TIFF | yes | yes | |
-| GIF | yes | yes | First frame for animated input |
+| HEIC / HEIF | image | yes | no |
+| PNG, JPEG/JPG, WebP, AVIF, TIFF, GIF | image | yes | yes |
+| MP4, MOV, WebM, MKV | video | yes | yes |
+| MP3, AAC, M4A, WAV, FLAC, OGG | audio | yes | yes |
+| PDF | document | yes (→ image) | yes (← image) |
 
-## Planned
+Cross-family rules (see `canConvert`):
 
-| Family | Examples | Engine direction |
-| --- | --- | --- |
-| Video | mp4, mov, webm | ffmpeg |
-| Audio | wav, flac, mp3, aac | ffmpeg |
-| Document | pdf ↔ image | poppler / pdfium |
+- same family ↔ same family (when encode is allowed)
+- video → audio or image (first frame)
+- image ↔ PDF
+- PDF → image (page 1)
 
 ```mermaid
 flowchart TD
   input["Input path"] --> detect["Detect format by extension"]
-  detect -->|image ready| sharp["sharp / libvips"]
-  detect -->|planned family| reject["Clear ConvertError + docs link"]
+  detect --> rules["canConvert from → to"]
+  rules -->|image| sharp["sharp"]
+  rules -->|video / audio| ffmpeg["ffmpeg"]
+  rules -->|pdf pair| pdf["poppler + PDF writer"]
+  rules -->|unsupported| reject["ConvertError"]
   sharp --> write["Write sibling output"]
+  ffmpeg --> write
+  pdf --> write
 ```
 
-Request new pairs in GitHub Issues. Prefer pairs that stay fully offline.
+Install `ffmpeg` and `poppler` (`pdftoppm`) for AV and PDF paths. Flox ships both.

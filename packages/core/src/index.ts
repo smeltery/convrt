@@ -1,8 +1,10 @@
 export {
   FORMATS,
+  canConvert,
   formatFromPath,
   listReadyFormats,
   normalizeFormat,
+  type EngineName,
   type FormatFamily,
   type FormatInfo,
   type SupportedFormat,

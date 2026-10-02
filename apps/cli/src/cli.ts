@@ -33,7 +33,7 @@ async function main() {
     if (args[0] === 'formats') {
       for (const f of listReadyFormats()) {
         process.stdout.write(
-          `${f.id.padEnd(8)} ${f.family.padEnd(10)} ${f.extensions.join(', ')}\n`,
+          `${f.id.padEnd(8)} ${f.family.padEnd(10)} ${f.engine.padEnd(8)} ${f.extensions.join(', ')}\n`,
         )
       }
       return

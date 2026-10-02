@@ -8,14 +8,13 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](.pre-commit-config.yaml)
 [![Dev env: Flox](https://img.shields.io/badge/dev%20env-flox-7c3aed.svg)](https://flox.dev)
 
-Right-click any file and convert it. Images first — HEIC, PNG, JPEG, WebP,
-AVIF, TIFF, GIF — with native engines that stay on your machine. Nothing gets
-uploaded.
+Right-click any file and convert it. Images, video, audio, and PDF — via sharp,
+ffmpeg, and poppler — stay on your machine. Nothing gets uploaded.
 
 ```sh
 convrt miso.heic --to webp
-# miso.heic → miso.webp
-# 4.8 MB → 612 KB · 0.08s
+convrt clip.mov --to mp3
+convrt slide.pdf --to png
 ```
 
 ## Docs

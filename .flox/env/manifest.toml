@@ -11,6 +11,10 @@ pre-commit.outputs = "all"
 actionlint.pkg-path = "actionlint"
 shellcheck.pkg-path = "shellcheck"
 shellcheck.outputs = "all"
+ffmpeg.pkg-path = "ffmpeg"
+ffmpeg.pkg-group = "engines"
+poppler_utils.pkg-path = "poppler_utils"
+poppler_utils.pkg-group = "engines"
 
 [hook]
 on-activate = '''

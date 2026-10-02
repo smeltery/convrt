@@ -7,8 +7,8 @@ matching CLI) that never uploads bytes.
 
 - Conversion stays on-device.
 - Do not send file contents, paths, sizes, or previews to analytics or logs.
-- Image encode/decode belongs in `@convrt/core`; UI and CLI must not embed
-  sharp calls directly.
+- Encode/decode belongs in `@convrt/core` engines (sharp, ffmpeg, pdf); UI and
+  CLI must not call those engines directly.
 - Keep the website honest about ready vs planned formats.
 - License is PolyForm Shield 1.0.0 — do not relicense casually.
 

@@ -27,7 +27,9 @@ chmod +x macos/quick-action/install.sh
 ./macos/quick-action/install.sh
 ```
 
-`convrt` must already be on your `PATH`.
+`convrt` must already be on your `PATH`, plus `ffmpeg` and `pdftoppm` for
+AV/PDF conversions. Pass a target format as the first argument (default
+`webp`); remaining args are selected file paths.
 
 ## Privacy
 
