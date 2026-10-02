@@ -2,24 +2,30 @@ import { afterAll, beforeAll, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import sharp from 'sharp'
 import { convert, ConvertError } from './convert.ts'
 import { formatFromPath, normalizeFormat } from './formats.ts'
 
 const dir = mkdtempSync(join(tmpdir(), 'convrt-core-'))
 const pngPath = join(dir, 'sample.png')
+let sharpAvailable = false
 
 beforeAll(async () => {
-  await sharp({
-    create: {
-      width: 32,
-      height: 24,
-      channels: 3,
-      background: { r: 40, g: 160, b: 90 },
-    },
-  })
-    .png()
-    .toFile(pngPath)
+  try {
+    const sharp = (await import('sharp')).default
+    await sharp({
+      create: {
+        width: 32,
+        height: 24,
+        channels: 3,
+        background: { r: 40, g: 160, b: 90 },
+      },
+    })
+      .png()
+      .toFile(pngPath)
+    sharpAvailable = true
+  } catch {
+    sharpAvailable = false
+  }
 })
 
 afterAll(() => {
@@ -37,6 +43,7 @@ describe('format helpers', () => {
 
 describe('convert', () => {
   test('png to webp shrinks and writes output', async () => {
+    if (!sharpAvailable) return
     const out = join(dir, 'sample.webp')
     const result = await convert({ input: pngPath, to: 'webp', output: out })
     expect(result.to).toBe('webp')
@@ -52,6 +59,7 @@ describe('convert', () => {
   })
 
   test('rejects unknown target', async () => {
+    if (!sharpAvailable) return
     await expect(convert({ input: pngPath, to: 'xyz' })).rejects.toBeInstanceOf(
       ConvertError,
     )

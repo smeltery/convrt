@@ -45,16 +45,12 @@ jobs:
           git fetch origin main
           test "$(git rev-list -n 1 "$RELEASE_TAG")" = "$(git rev-parse origin/main)"
 
-      - uses: flox/install-flox-action@v2
-
-      - uses: nix-community/cache-nix-action@v6
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('.flox/env/manifest.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          gc-max-store-size-linux: 5G
+          bun-version: 1.3.13
 
-      - run: flox activate -- bun install --frozen-lockfile
-      - run: flox activate -- bun run ci
+      - run: bun install --frozen-lockfile
+      - run: bun run ci
 
   build-cli:
     name: build cli ${{ matrix.target }}
@@ -119,10 +115,12 @@ jobs:
         with:
           ref: ${{ env.RELEASE_TAG }}
 
-      - uses: flox/install-flox-action@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.13
 
-      - run: flox activate -- bun install --frozen-lockfile
-      - run: flox activate -- bun run --filter @convrt/web build
+      - run: bun install --frozen-lockfile
+      - run: bun run --filter @convrt/web build
 
       - name: Package website
         run: |

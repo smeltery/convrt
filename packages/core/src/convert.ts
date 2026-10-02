@@ -1,5 +1,4 @@
 import { basename, dirname, extname, join } from 'node:path'
-import sharp from 'sharp'
 import {
   type SupportedFormat,
   FORMATS,
@@ -42,32 +41,14 @@ function outputPathFor(
   return join(dirname(input), `${base}${ext}`)
 }
 
-async function encode(
-  pipeline: sharp.Sharp,
-  to: SupportedFormat,
-  quality: number,
-): Promise<Buffer> {
-  switch (to) {
-    case 'png':
-      return pipeline.png().toBuffer()
-    case 'jpeg':
-    case 'jpg':
-      return pipeline.jpeg({ quality, mozjpeg: true }).toBuffer()
-    case 'webp':
-      return pipeline.webp({ quality }).toBuffer()
-    case 'avif':
-      return pipeline.avif({ quality }).toBuffer()
-    case 'tiff':
-      return pipeline.tiff({ quality }).toBuffer()
-    case 'gif':
-      return pipeline.gif().toBuffer()
-    case 'heic':
-    case 'heif':
-      throw new ConvertError(`${to} is decode-only`)
-    default: {
-      const _exhaustive: never = to
-      throw new ConvertError(`unsupported output format: ${_exhaustive}`)
-    }
+async function loadSharp() {
+  try {
+    return (await import('sharp')).default
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error)
+    throw new ConvertError(
+      `image engine unavailable (install sharp native deps): ${detail}`,
+    )
   }
 }
 
@@ -98,9 +79,40 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
     throw new ConvertError('quality must be between 1 and 100')
   }
 
+  const sharp = await loadSharp()
   const bytesIn = inputFile.size
-  const pipeline = sharp(options.input, { failOn: 'none' }).rotate()
-  const buffer = await encode(pipeline, to, quality)
+  let pipeline = sharp(options.input, { failOn: 'none' }).rotate()
+
+  switch (to) {
+    case 'png':
+      pipeline = pipeline.png()
+      break
+    case 'jpeg':
+    case 'jpg':
+      pipeline = pipeline.jpeg({ quality, mozjpeg: true })
+      break
+    case 'webp':
+      pipeline = pipeline.webp({ quality })
+      break
+    case 'avif':
+      pipeline = pipeline.avif({ quality })
+      break
+    case 'tiff':
+      pipeline = pipeline.tiff({ quality })
+      break
+    case 'gif':
+      pipeline = pipeline.gif()
+      break
+    case 'heic':
+    case 'heif':
+      throw new ConvertError(`${to} is decode-only`)
+    default: {
+      const _exhaustive: never = to
+      throw new ConvertError(`unsupported output format: ${_exhaustive}`)
+    }
+  }
+
+  const buffer = await pipeline.toBuffer()
   const output = outputPathFor(options.input, to, options.output)
   await Bun.write(output, buffer)
 

@@ -9,7 +9,9 @@ Activation installs dependencies and pre-commit hooks when needed.
 flox activate
 ```
 
-CI runs checks inside `flox activate -- …` so local and remote toolchains match.
+Local development runs through `flox activate`. Hygiene CI uses Flox for
+actionlint/shellcheck. The quality job uses host Bun via `setup-bun` so sharp's
+native bindings can load against the runner `libstdc++`.
 
 ## Pre-commit
 
