@@ -26,8 +26,8 @@ pre-commit run --all-files
 
 | Job | Purpose |
 | --- | --- |
-| `quality` | `bun run ci` through Flox |
-| `hygiene` | actionlint + `git diff --check` (docs already in `ci`) |
+| `quality` | `bun run ci` through Flox on `ubuntu-latest` |
+| `hygiene` | actionlint + shellcheck + `git diff --check` |
 
 ## Releases
 
