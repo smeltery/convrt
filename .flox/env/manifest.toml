@@ -14,11 +14,11 @@ shellcheck.outputs = "all"
 
 [hook]
 on-activate = '''
-  if [ ! -d "$FLOX_ENV_PROJECT/node_modules" ]; then
+  if [ "${CI:-}" != "true" ] && [ ! -d "$FLOX_ENV_PROJECT/node_modules" ]; then
     echo "convrt: installing dependencies (first activation)…" >&2
     (cd "$FLOX_ENV_PROJECT" && bun install --frozen-lockfile)
   fi
-  if [ -f "$FLOX_ENV_PROJECT/.pre-commit-config.yaml" ]; then
+  if [ "${CI:-}" != "true" ] && [ -f "$FLOX_ENV_PROJECT/.pre-commit-config.yaml" ]; then
     (cd "$FLOX_ENV_PROJECT" && command -v pre-commit >/dev/null && pre-commit install --install-hooks >/dev/null 2>&1 || true)
   fi
   echo "convrt ready — bun $(bun --version 2>/dev/null || echo '?') · bun run ci"

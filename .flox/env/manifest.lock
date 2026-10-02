@@ -27,7 +27,7 @@
       }
     },
     "hook": {
-      "on-activate": "  if [ ! -d \"$FLOX_ENV_PROJECT/node_modules\" ]; then\n    echo \"convrt: installing dependencies (first activation)…\" >&2\n    (cd \"$FLOX_ENV_PROJECT\" && bun install --frozen-lockfile)\n  fi\n  if [ -f \"$FLOX_ENV_PROJECT/.pre-commit-config.yaml\" ]; then\n    (cd \"$FLOX_ENV_PROJECT\" && command -v pre-commit >/dev/null && pre-commit install --install-hooks >/dev/null 2>&1 || true)\n  fi\n  echo \"convrt ready — bun $(bun --version 2>/dev/null || echo '?') · bun run ci\"\n"
+      "on-activate": "  if [ \"${CI:-}\" != \"true\" ] && [ ! -d \"$FLOX_ENV_PROJECT/node_modules\" ]; then\n    echo \"convrt: installing dependencies (first activation)…\" >&2\n    (cd \"$FLOX_ENV_PROJECT\" && bun install --frozen-lockfile)\n  fi\n  if [ \"${CI:-}\" != \"true\" ] && [ -f \"$FLOX_ENV_PROJECT/.pre-commit-config.yaml\" ]; then\n    (cd \"$FLOX_ENV_PROJECT\" && command -v pre-commit >/dev/null && pre-commit install --install-hooks >/dev/null 2>&1 || true)\n  fi\n  echo \"convrt ready — bun $(bun --version 2>/dev/null || echo '?') · bun run ci\"\n"
     },
     "options": {
       "systems": [
