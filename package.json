@@ -1,0 +1,37 @@
+{
+  "name": "convrt",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "packageManager": "bun@1.3.13",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format": "biome format --write .",
+    "format:check": "biome ci --formatter-enabled=true --linter-enabled=false --assist-enabled=false .",
+    "check:file-sizes": "bun scripts/check-file-sizes.ts",
+    "check:flat-directories": "bun scripts/check-flat-directories.ts",
+    "check:markdown": "bun scripts/check-markdown.ts",
+    "check:mermaid": "bun scripts/check-mermaid.ts",
+    "check:doc-links": "bun scripts/check-doc-links.ts",
+    "check:docs": "bun run check:markdown && bun run check:mermaid && bun run check:doc-links",
+    "check:budgets": "bun run check:file-sizes && bun run check:flat-directories",
+    "check:hygiene": "bun run check:docs && bun run check:budgets",
+    "ci": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build && bun run check:hygiene"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.5",
+    "@types/bun": "^1.4.2",
+    "linkedom": "^0.18.12",
+    "markdownlint": "^0.39.0",
+    "mermaid": "^11.12.0",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.2"
+  }
+}

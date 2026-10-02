@@ -1,0 +1,76 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format-check
+        name: biome format
+        entry: bun run format:check
+        language: system
+        pass_filenames: false
+      - id: bun-lint
+        name: bun lint
+        entry: bun run lint
+        language: system
+        pass_filenames: false
+      - id: bun-typecheck
+        name: bun typecheck
+        entry: bun run typecheck
+        language: system
+        pass_filenames: false
+        types_or: [javascript, ts, tsx]
+      - id: bun-test
+        name: bun test
+        entry: bun run test
+        language: system
+        pass_filenames: false
+        types_or: [javascript, ts, tsx]
+      - id: markdown
+        name: markdownlint
+        entry: bun scripts/check-markdown.ts
+        language: system
+        pass_filenames: false
+        files: \.md$
+      - id: mermaid
+        name: mermaid diagrams
+        entry: bun scripts/check-mermaid.ts
+        language: system
+        pass_filenames: false
+        files: \.(md|mdx)$
+      - id: doc-links
+        name: doc links
+        entry: bun scripts/check-doc-links.ts
+        language: system
+        pass_filenames: false
+        files: \.(md|mdx)$
+      - id: file-size-budgets
+        name: file size budgets
+        entry: bun scripts/check-file-sizes.ts
+        language: system
+        pass_filenames: false
+      - id: flat-directory-budgets
+        name: flat directory budgets
+        entry: bun scripts/check-flat-directories.ts
+        language: system
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: bash scripts/check-shell.sh
+        language: system
+        pass_filenames: false
+        files: \.sh$
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json

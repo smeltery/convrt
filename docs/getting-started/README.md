@@ -1,0 +1,38 @@
+# Getting started
+
+## Install the toolchain
+
+Prefer Flox so the same tools run locally and in CI:
+
+```sh
+flox activate
+bun install --frozen-lockfile
+```
+
+Without Flox, install [Bun](https://bun.sh/) 1.3 and [pre-commit](https://pre-commit.com/).
+
+## Convert a file
+
+```sh
+bun run apps/cli/src/cli.ts sample.png --to webp
+bun run apps/cli/src/cli.ts formats
+```
+
+Quality defaults to `82`. Override with `--quality 70`.
+
+## Website
+
+```sh
+bun run --filter @convrt/web dev
+```
+
+Open `http://localhost:5173`.
+
+## Verify
+
+```sh
+bun run ci
+```
+
+That mirrors GitHub Actions: format, lint, typecheck, test, build, and doc
+hygiene (markdown, mermaid, links, budgets).
