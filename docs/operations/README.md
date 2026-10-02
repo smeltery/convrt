@@ -13,6 +13,12 @@ Local development runs through `flox activate`. Hygiene CI uses Flox for
 actionlint/shellcheck. The quality job uses host Bun via `setup-bun` so sharp's
 native bindings can load against the runner `libstdc++`.
 
+## LOC budgets
+
+`scripts/file-size-budgets.json` defaults to **200 lines** per tracked source
+file. `scripts/flat-directory-budgets.json` defaults to **15** direct files per
+directory. Exceptions need an explicit entry and reason.
+
 ## Pre-commit
 
 `.pre-commit-config.yaml` mirrors CI gates: Biome format, lint, typecheck,

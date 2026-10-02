@@ -1,7 +1,4 @@
-import { ConversionDemo } from './components/ConversionDemo.tsx'
-import { FormatsStrip } from './components/FormatsStrip.tsx'
-import { Header } from './components/Header.tsx'
-import { Hero } from './components/Hero.tsx'
+import { ConversionDemo, Formats, Header, Hero } from './components/Demo.tsx'
 
 export function App() {
   return (
@@ -10,7 +7,7 @@ export function App() {
       <main>
         <Hero />
         <ConversionDemo />
-        <FormatsStrip />
+        <Formats />
       </main>
     </>
   )

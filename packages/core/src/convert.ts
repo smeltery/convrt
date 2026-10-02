@@ -30,15 +30,10 @@ export class ConvertError extends Error {
   }
 }
 
-function outputPathFor(
-  input: string,
-  to: SupportedFormat,
-  explicit?: string,
-): string {
+function outputPathFor(input: string, to: SupportedFormat, explicit?: string) {
   if (explicit) return explicit
-  const base = basename(input, extname(input))
   const ext = to === 'jpeg' || to === 'jpg' ? '.jpg' : `.${to}`
-  return join(dirname(input), `${base}${ext}`)
+  return join(dirname(input), `${basename(input, extname(input))}${ext}`)
 }
 
 async function loadSharp() {
@@ -46,9 +41,7 @@ async function loadSharp() {
     return (await import('sharp')).default
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error)
-    throw new ConvertError(
-      `image engine unavailable (install sharp native deps): ${detail}`,
-    )
+    throw new ConvertError(`image engine unavailable: ${detail}`)
   }
 }
 
@@ -61,15 +54,11 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
 
   const from = formatFromPath(options.input)
   if (!from) {
-    throw new ConvertError(
-      `unsupported input format for ${options.input}; see docs/formats/`,
-    )
+    throw new ConvertError(`unsupported input format for ${options.input}`)
   }
 
   const to = normalizeFormat(options.to)
-  if (!to) {
-    throw new ConvertError(`unsupported target format: ${options.to}`)
-  }
+  if (!to) throw new ConvertError(`unsupported target format: ${options.to}`)
   if (!FORMATS[to].encode) {
     throw new ConvertError(`${to} is decode-only; pick an encodeable format`)
   }
@@ -80,37 +69,15 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
   }
 
   const sharp = await loadSharp()
-  const bytesIn = inputFile.size
   let pipeline = sharp(options.input, { failOn: 'none' }).rotate()
-
-  switch (to) {
-    case 'png':
-      pipeline = pipeline.png()
-      break
-    case 'jpeg':
-    case 'jpg':
-      pipeline = pipeline.jpeg({ quality, mozjpeg: true })
-      break
-    case 'webp':
-      pipeline = pipeline.webp({ quality })
-      break
-    case 'avif':
-      pipeline = pipeline.avif({ quality })
-      break
-    case 'tiff':
-      pipeline = pipeline.tiff({ quality })
-      break
-    case 'gif':
-      pipeline = pipeline.gif()
-      break
-    case 'heic':
-    case 'heif':
-      throw new ConvertError(`${to} is decode-only`)
-    default: {
-      const _exhaustive: never = to
-      throw new ConvertError(`unsupported output format: ${_exhaustive}`)
-    }
-  }
+  if (to === 'png') pipeline = pipeline.png()
+  else if (to === 'jpeg' || to === 'jpg') {
+    pipeline = pipeline.jpeg({ quality, mozjpeg: true })
+  } else if (to === 'webp') pipeline = pipeline.webp({ quality })
+  else if (to === 'avif') pipeline = pipeline.avif({ quality })
+  else if (to === 'tiff') pipeline = pipeline.tiff({ quality })
+  else if (to === 'gif') pipeline = pipeline.gif()
+  else throw new ConvertError(`${to} is decode-only`)
 
   const buffer = await pipeline.toBuffer()
   const output = outputPathFor(options.input, to, options.output)
@@ -121,7 +88,7 @@ export async function convert(options: ConvertOptions): Promise<ConvertResult> {
     output,
     from,
     to,
-    bytesIn,
+    bytesIn: inputFile.size,
     bytesOut: buffer.byteLength,
     elapsedMs: Math.round((performance.now() - started) * 100) / 100,
   }

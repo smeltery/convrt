@@ -1,4 +1,13 @@
 {
-  "default_files": 25,
-  "directories": {}
+  "default_files": 15,
+  "directories": {
+    ".": {
+      "limit": 20,
+      "reason": "Root holds package, CI, and project metadata."
+    },
+    "scripts": {
+      "limit": 12,
+      "reason": "Hygiene checkers share one directory."
+    }
+  }
 }

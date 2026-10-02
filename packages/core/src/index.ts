@@ -1,12 +1,10 @@
 export {
   FORMATS,
   formatFromPath,
-  listEncodableFormats,
   listReadyFormats,
   normalizeFormat,
   type FormatFamily,
   type FormatInfo,
-  type ImageFormat,
   type SupportedFormat,
 } from './formats.ts'
 export {

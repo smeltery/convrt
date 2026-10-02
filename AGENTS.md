@@ -24,5 +24,7 @@ matching CLI) that never uploads bytes.
 
 - Use Bun and root scripts. Prefer `flox activate`.
 - Keep modules small and TypeScript strict.
+- Honor LOC budgets in `scripts/file-size-budgets.json` (default 200 lines)
+  and flat-directory budgets (default 15 files).
 - Pre-commit mirrors CI; fix failures instead of skipping hooks.
 - Never claim a format works until a test or manual conversion proves it.
