@@ -6,8 +6,8 @@ describe('App', () => {
   test('renders brand and hero copy', () => {
     const html = renderToStaticMarkup(<App />)
     expect(html).toContain('convrt')
-    expect(html).toContain('Convert any file with a right-click.')
-    expect(html).toContain('miso.heic')
-    expect(html).toContain('miso.webp')
+    expect(html).toContain('New format.')
+    expect(html).toContain('weekend.')
+    expect(html).toContain('Interactive illustration.')
   })
 })

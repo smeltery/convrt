@@ -1,8 +1,9 @@
+const github = 'https://github.com/smeltery/convrt'
+
 export const SITE = {
   name: 'convrt',
-  github: 'https://github.com/smeltery/convrt',
-  docs: '/docs/',
-  tagline: 'Convert any file with a right-click.',
-  blurb:
-    'Images, video, audio and PDFs. Native engines, fully on your machine. Nothing gets uploaded.',
+  github,
+  install: `${github}/tree/main/docs/getting-started`,
+  finder: `${github}/tree/main/docs/macos`,
+  formats: `${github}/tree/main/docs/formats`,
 } as const

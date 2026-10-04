@@ -1,0 +1,64 @@
+@media (max-width: 600px) {
+  .site-header {
+    top: 10px;
+    padding-top: 10px;
+  }
+  .nav {
+    gap: 0;
+  }
+  .nav a {
+    padding: 10px;
+    font-size: 11px;
+  }
+  .nav .brand {
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+  .hero {
+    padding-top: 65px;
+    padding-bottom: 40px;
+  }
+  .hero-description {
+    font-size: 15px;
+  }
+  .how {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-bottom: 50px;
+  }
+  .format-grid {
+    grid-template-columns: 1fr;
+  }
+  .format-card {
+    position: relative;
+    padding-left: 98px;
+  }
+  .format-symbol {
+    position: absolute;
+    left: 24px;
+    top: 28px;
+  }
+  .format-example {
+    margin-top: 16px;
+  }
+  .footer {
+    flex-wrap: wrap;
+  }
+  .footer > span {
+    order: 3;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .btn,
+  .nav a {
+    transition: none;
+  }
+  .btn:hover {
+    transform: none;
+  }
+}

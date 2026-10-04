@@ -1,0 +1,73 @@
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.format-card {
+  background: #eeefe9;
+  border: 1px solid #e6e7df;
+  border-radius: 20px;
+  padding: 28px 24px;
+}
+.format-symbol {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 58px;
+  margin-bottom: 34px;
+  font:
+    32px Georgia,
+    serif;
+  background: #fafbf7;
+  border: 1px solid #d9ddd1;
+  border-radius: 9px;
+  color: #717d62;
+  box-shadow: 3px 4px 0 #e1e5d9;
+  transform: rotate(-5deg);
+}
+.format-card:nth-child(2) {
+  background: #eeece8;
+  border-color: #e5e1db;
+}
+.format-card:nth-child(2) .format-symbol {
+  color: #8f7a65;
+  transform: rotate(5deg);
+}
+.format-card:nth-child(3) {
+  background: #eaedee;
+  border-color: #dfe3e5;
+}
+.format-card:nth-child(3) .format-symbol {
+  color: #72838b;
+}
+.format-card p {
+  color: var(--muted);
+  margin-top: 8px;
+  font-size: 12px;
+}
+.format-example {
+  display: inline-flex;
+  gap: 20px;
+  align-items: center;
+  font:
+    11px ui-monospace,
+    monospace;
+  margin-top: 24px;
+  background: #ffffff91;
+  padding: 9px 12px;
+  border-radius: 6px;
+}
+.format-example span {
+  color: var(--muted);
+}
+.format-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 20px;
+}
+.format-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}

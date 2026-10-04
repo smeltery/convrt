@@ -1,0 +1,136 @@
+.context-menu {
+  position: absolute;
+  top: 154px;
+  left: 157px;
+  width: 237px;
+  padding: 5px;
+  border-radius: 10px;
+  background: #fbfcf8f5;
+  border: 1px solid #d9dcd2;
+  box-shadow:
+    0 10px 30px #3139291c,
+    0 2px 6px #3139290d;
+  backdrop-filter: blur(14px);
+  font-size: 11px;
+}
+.context-menu > span {
+  display: block;
+  padding: 6px 10px;
+}
+.context-menu b {
+  float: right;
+  font-weight: 400;
+}
+.context-menu .menu-divider {
+  border-top: 1px solid #e3e5dd;
+  margin-top: 3px;
+}
+.context-menu button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
+  border: 0;
+  border-radius: 5px;
+  padding: 9px 10px;
+  background: #556448;
+  color: white;
+  font-size: 11px;
+}
+.context-menu button:hover {
+  background: #3f5032;
+}
+.context-menu .menu-hint {
+  font-size: 9px;
+  color: var(--muted);
+  padding-top: 8px;
+}
+.finder-status {
+  position: absolute;
+  bottom: 4px;
+  left: 20px;
+  right: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f1ed;
+  text-align: center;
+  font-size: 9px;
+  color: #8d9186;
+}
+.conversion-result {
+  margin: 0 34px;
+  font-size: 11px;
+  color: #58694b;
+}
+.conversion-result span {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e9efdf;
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
+.demo-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 22px 8px 0;
+  font-size: 11px;
+  color: var(--muted);
+  align-items: center;
+}
+.demo-caption button {
+  flex-shrink: 0;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 11px;
+}
+.demo-caption button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.demo-note {
+  margin: 4px 8px 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .finder-window {
+    grid-template-columns: 1fr;
+    min-height: 365px;
+  }
+  .finder-sidebar {
+    display: none;
+  }
+  .finder-toolbar {
+    padding-inline: 12px;
+  }
+  .finder-files {
+    padding: 23px 12px;
+    gap: 20px;
+    justify-content: center;
+  }
+  .finder-file,
+  .empty-file {
+    width: 115px;
+  }
+  .context-menu {
+    left: auto;
+    right: 8px;
+    top: 150px;
+    width: min(237px, 95%);
+  }
+  .conversion-result {
+    margin: 22px 12px;
+    text-align: center;
+  }
+  .demo-caption {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .demo-caption button {
+    padding-top: 0;
+  }
+}

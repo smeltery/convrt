@@ -1,0 +1,124 @@
+.demo {
+  max-width: 810px;
+}
+.finder-window {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+  min-height: 360px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e3e4df;
+  border-radius: 20px;
+  box-shadow:
+    0 20px 45px -25px #373d3329,
+    0 3px 10px #373d3305;
+}
+.finder-sidebar {
+  border-radius: 13px;
+  background: #f0f1ed;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 15px 8px;
+  font-size: 11px;
+  color: #60645a;
+}
+.window-dots {
+  display: flex;
+  gap: 7px;
+  margin: 1px 5px 24px;
+}
+.window-dots i {
+  width: 10px;
+  height: 10px;
+  background: #d3d6ce;
+  border-radius: 50%;
+}
+.finder-sidebar > span {
+  padding: 7px 9px;
+}
+.finder-sidebar .sidebar-label {
+  color: #8b8e85;
+  font-size: 9px;
+  padding-bottom: 1px;
+  margin-top: 8px;
+}
+.sidebar-selected {
+  background: #dfe3d8;
+  border-radius: 6px;
+  color: #3d4535;
+}
+.finder-main {
+  position: relative;
+  min-width: 0;
+  padding-bottom: 35px;
+}
+.finder-toolbar {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  height: 51px;
+  padding: 0 22px;
+  font-size: 12px;
+}
+.finder-toolbar > span {
+  color: #9b9e95;
+  font-size: 22px;
+}
+.finder-toolbar strong {
+  font-weight: 600;
+}
+.toolbar-view {
+  margin-left: auto;
+}
+.finder-files {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 28px 34px;
+}
+.finder-file {
+  width: 138px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.photo-preview {
+  background: white;
+  padding: 5px;
+  border: 1px solid #dddfd7;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px #3333330a;
+  transform: rotate(-3deg);
+}
+.photo-preview svg {
+  width: 100%;
+  display: block;
+}
+.finder-file:nth-child(2) .photo-preview {
+  transform: rotate(3deg);
+}
+.file-name {
+  display: inline-block;
+  padding: 4px 6px;
+  margin-top: 9px;
+  font-size: 11px;
+  background: #e8eddf;
+  border-radius: 4px;
+}
+.file-kind {
+  display: block;
+  font-size: 9px;
+  color: #898d82;
+  margin-top: 5px;
+}
+.empty-file {
+  width: 138px;
+  margin-top: 20px;
+  padding: 24px 12px;
+  border: 1px dashed #e1e3db;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #90958a;
+}
