@@ -1,5 +1,7 @@
 # convrt
 
+![convrt — New format. Same file. Same Mac.](apps/web/public/og.png)
+
 [![CI](https://github.com/smeltery/convrt/actions/workflows/ci.yml/badge.svg)](https://github.com/smeltery/convrt/actions/workflows/ci.yml)
 [![License: PolyForm Shield 1.0.0](https://img.shields.io/badge/license-PolyForm%20Shield%201.0.0-blue.svg)](LICENSE)
 [![Bun](https://img.shields.io/badge/bun-1.3-black?logo=bun&logoColor=white)](https://bun.sh/)
