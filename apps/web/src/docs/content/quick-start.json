@@ -1,0 +1,73 @@
+{
+  "path": "/docs/quick-start",
+  "title": "Quick start",
+  "group": "Start here",
+  "description": "Run your first PNG-to-WebP conversion.",
+  "sections": [
+    {
+      "id": "setup",
+      "title": "Start the server",
+      "paragraphs": [
+        "From the repository root, start the Docker deployment. Preserve the key in a secret manager; changing it changes job ownership."
+      ],
+      "code": "export CONVRT_API_KEYS=\"$(openssl rand -hex 32)\"\ndocker compose -f deploy/api/compose.yaml up --build -d\nexport CONVRT_API_URL=\"http://127.0.0.1:8787\"\nexport CONVRT_API_KEY=\"$CONVRT_API_KEYS\"",
+      "language": "Shell"
+    },
+    {
+      "id": "convert",
+      "title": "Choose your client",
+      "paragraphs": [
+        "The examples below provide complete upload, poll, download, and cleanup flows."
+      ],
+      "links": [
+        {
+          "label": "Node helper",
+          "href": "/docs/examples/node-script"
+        },
+        {
+          "label": "Shell script",
+          "href": "/docs/examples/shell-script"
+        },
+        {
+          "label": "Browser upload route",
+          "href": "/docs/examples/server-upload-route"
+        }
+      ]
+    },
+    {
+      "id": "cli",
+      "title": "Convert locally",
+      "paragraphs": [
+        "For files already on your machine, the CLI avoids an upload. Install from the repository setup guide first."
+      ],
+      "code": "convrt photo.png --to webp\nconvrt photos/ --to webp --recursive --jobs 2\nconvrt targets photo.png",
+      "language": "Shell"
+    },
+    {
+      "id": "verify",
+      "title": "Verify the result",
+      "paragraphs": [
+        "A successful create request means the file has been accepted, not that the conversion is complete. Keep the returned job ID, poll with the same key, and wait for succeeded before downloading. A failed job should stop the workflow rather than triggering another download attempt.",
+        "Save the returned bytes to a new file and open it in a viewer that supports the target format. The downloadable filename is generic; your client is responsible for selecting a meaningful local filename."
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "If the first request fails",
+      "paragraphs": [
+        "Check /health first to separate connectivity problems from authentication problems. A 401 usually means the client key does not match the server configuration. A 422 means the format or conversion route is unavailable; inspect the engines on the server.",
+        "The upload limit applies to the whole multipart request. Choose a small fixture for your first test, and leave room for multipart overhead. If you see 429, wait for active uploads to finish or remove completed jobs before trying again."
+      ],
+      "links": [
+        {
+          "label": "Error reference",
+          "href": "/docs/reference/errors"
+        },
+        {
+          "label": "Limits",
+          "href": "/docs/reference/limits"
+        }
+      ]
+    }
+  ]
+}

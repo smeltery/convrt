@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <title>convrt — new format, same file, same Mac.</title>
-  <desc>Convert files with a right-click. A Finder illustration shows a PNG image becoming WebP, locally on your Mac.</desc>
+  <title>convrt — new format, same file, your device.</title>
+  <desc>Convert files with a right-click. A Finder illustration shows a PNG image becoming WebP, locally on your device.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
       <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#373d33" flood-opacity=".1"/>
@@ -19,20 +19,17 @@
   </defs>
   <rect width="1200" height="630" fill="#f6f6f3"/>
   <g font-family="Arial, Helvetica, sans-serif" fill="#242522">
-    <rect x="62" y="48" width="121" height="47" rx="24" fill="#e9ece2"/>
-    <text x="84" y="79" font-size="28" font-weight="700" letter-spacing="-1.8">convrt.</text>
+    <g transform="translate(62 48)"><rect width="27" height="27" rx="7" fill="#b9caa6"/><rect x="13" y="13" width="27" height="27" rx="7" fill="#547846"/></g>
+    <text x="115" y="81" font-size="34" font-weight="700" letter-spacing="-1.8">convrt.</text>
     <text x="1138" y="78" text-anchor="end" font-size="14" fill="#6d7069">A little utility. A lot less friction.</text>
     <text x="62" y="214" font-size="70" font-weight="600" letter-spacing="-3.5">New format.</text>
     <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="76" letter-spacing="-3.8">
       <text x="60" y="293">Same file.</text>
-      <text x="60" y="372">Same Mac.</text>
+      <text x="60" y="372">Your device.</text>
     </g>
     <text x="64" y="430" font-size="21" fill="#6d7069">Convert your files with a right-click.</text>
-    <rect x="64" y="465" width="225" height="44" rx="22" fill="#292c26"/>
-    <svg x="99" y="476" width="20" height="22" viewBox="0 0 24 24" fill="#fff">
-      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/>
-    </svg>
-    <text x="128" y="492" fill="#fff" font-size="15">Right on your Mac.</text>
+    <rect x="64" y="465" width="262" height="44" rx="22" fill="#292c26"/>
+    <text x="195" y="493" text-anchor="middle" fill="#fff" font-size="15">macOS · Windows · Linux</text>
     <g transform="translate(606 167)">
       <rect width="532" height="342" rx="20" fill="#fff" stroke="#e1e2dc" filter="url(#shadow)"/>
       <rect x="8" y="8" width="124" height="326" rx="13" fill="#f0f1ed"/>
@@ -72,7 +69,7 @@
       <g transform="translate(242 207)">
         <rect width="257" height="87" rx="10" fill="#fbfcf8" stroke="#d9dcd2" filter="url(#menu-shadow)"/>
         <rect x="6" y="6" width="245" height="39" rx="5" fill="#556448"/>
-        <path d="M20 20h16m-4-4 4 4-4 4m4 7H20m4-4-4 4 4 4" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(18 14)"><rect width="14" height="14" rx="4" fill="#b9caa6"/><rect x="7" y="7" width="14" height="14" rx="4" fill="#edf3e6"/></g>
         <text x="47" y="31" font-size="13" fill="#fff">Convert with convrt</text>
         <text x="16" y="67" font-size="11" fill="#6d7069">New format. Original kept.</text>
       </g>
@@ -91,7 +88,7 @@
     </g>
     <path d="M64 551h1074" stroke="#e1e2dc"/>
     <circle cx="69" cy="584" r="4" fill="#82906d"/>
-    <text x="83" y="589" font-size="14" fill="#6d7069">No uploads. No account. Just your files.</text>
-    <text x="1138" y="589" text-anchor="end" font-size="14" fill="#6d7069">Finder Quick Action + CLI</text>
+    <text x="83" y="589" font-size="14" fill="#6d7069">Local conversions. Optional self-hosted Cloud API.</text>
+    <text x="1138" y="589" text-anchor="end" font-size="14" fill="#6d7069">Desktop · Right-click · CLI</text>
   </g>
 </svg>

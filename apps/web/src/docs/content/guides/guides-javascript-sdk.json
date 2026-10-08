@@ -1,0 +1,59 @@
+{
+  "path": "/docs/guides/javascript-sdk",
+  "title": "TypeScript SDK",
+  "group": "Guides",
+  "description": "Use the workspace SDK for upload, polling, and download.",
+  "sections": [
+    {
+      "id": "install",
+      "title": "Workspace package",
+      "paragraphs": [
+        "@convrt/sdk lives in packages/sdk and is private. It is not published to npm. Use it from a workspace package that declares the dependency, or import its source within this repository.",
+        "Construct Convrt with baseUrl and apiKey. HTTPS is required except for localhost and loopback addresses. Credential-bearing redirects are refused."
+      ]
+    },
+    {
+      "id": "methods",
+      "title": "Methods",
+      "paragraphs": [],
+      "table": [
+        ["Method", "Result"],
+        ["createJob(file, to, options?, signal?)", "Job"],
+        ["getJob(id, signal?)", "Job"],
+        ["download(id, signal?)", "Blob"],
+        ["deleteJob(id)", "void"],
+        ["convert(file, to, options?, settings?)", "Blob after polling"]
+      ]
+    },
+    {
+      "id": "timeout",
+      "title": "Timeouts and cleanup",
+      "paragraphs": [
+        "settings accepts signal and timeoutMs, defaulting to 180000 milliseconds. convert does not delete completed jobs. Use the manual job methods if you need immediate cleanup or resumable polling."
+      ],
+      "links": [
+        {
+          "label": "Runnable Node helper",
+          "href": "/docs/examples/node-script"
+        }
+      ]
+    },
+    {
+      "id": "manual-flow",
+      "title": "Keep the job ID when you need control",
+      "paragraphs": [
+        "convert is convenient when you only need the final Blob. Use the separate methods when you want to show progress, save the ID for later, or explicitly delete the output after saving it."
+      ],
+      "code": "const job = await client.createJob(file, \"webp\", { quality: 80 });\nconst current = await client.getJob(job.id);\nif (current.status === \"succeeded\") {\n  const output = await client.download(job.id);\n  await Bun.write(\"photo.webp\", output);\n  await client.deleteJob(job.id);\n}",
+      "language": "TypeScript"
+    },
+    {
+      "id": "errors",
+      "title": "Handle SDK failures",
+      "paragraphs": [
+        "Non-successful HTTP responses produce an Error that includes the status. A failed conversion produces an Error containing the job failure message. The SDK currently has no typed error-code hierarchy or progress callback.",
+        "An AbortSignal or timeout stops the client\u2019s work. Keep a job ID through createJob if you need to schedule cleanup separately. The SDK does not cancel an active worker or remove outputs automatically."
+      ]
+    }
+  ]
+}

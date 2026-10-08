@@ -1,0 +1,41 @@
+{
+  "path": "/docs/guides/cancelling",
+  "title": "Cancellation and cleanup",
+  "group": "Guides",
+  "description": "Stop client requests and remove jobs that are no longer needed.",
+  "sections": [
+    {
+      "id": "delete",
+      "title": "Delete queued or completed jobs",
+      "paragraphs": [
+        "Use DELETE /v1/jobs/{id}. Success returns 204 without a body. Once removed, further requests return 404. A running job returns 409 and continues converting."
+      ],
+      "code": "curl -X DELETE \"$CONVRT_API_URL/v1/jobs/$JOB_ID\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\"",
+      "language": "Shell"
+    },
+    {
+      "id": "abort",
+      "title": "Client cancellation",
+      "paragraphs": [
+        "AbortSignal cancels a client request or SDK polling. It does not terminate an accepted server conversion. Keep the job ID if you need to retrieve or delete it later.",
+        "When cleanup returns 409, retry after completion. The one-hour expiry provides eventual cleanup if the client disconnects."
+      ]
+    },
+    {
+      "id": "races",
+      "title": "Handle deletion races",
+      "paragraphs": [
+        "Deletion is conditional on the server\u2019s current state. A job that was queued during your last poll may be running when deletion arrives. Handle 409 by waiting for completion and then attempting cleanup again.",
+        "Deleting a succeeded job also removes its output. Finish saving the download before issuing DELETE. Once a job is deleted, the API does not retain a tombstone or a cancelled status to query."
+      ]
+    },
+    {
+      "id": "timeouts",
+      "title": "When your client loses the response",
+      "paragraphs": [
+        "Aborting the upload connection does not prove the server rejected the job. If the server accepted it before the connection closed, it can continue running. Without the response ID, rely on automatic retention rather than blindly creating retries.",
+        "Use an application request ID in your own database to track a submission attempt and its returned job ID. The API does not implement idempotency keys, so your application must decide when a fresh upload is appropriate."
+      ]
+    }
+  ]
+}

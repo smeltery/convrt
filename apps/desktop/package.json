@@ -1,0 +1,60 @@
+{
+  "name": "@convrt/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/main.cjs",
+  "scripts": {
+    "dev": "electron .",
+    "build": "bun ../../packages/core/scripts/build-runtime.ts ../cli/src/cli.ts dist/convrt && bun ../../packages/core/scripts/build-runtime.ts src/worker.ts dist/convrt-worker",
+    "package": "bun run build && electron-builder --publish never",
+    "lint": "biome lint src",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@convrt/core": "workspace:*"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "dev.smeltery.convrt",
+    "productName": "convrt",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/*.cjs",
+      "src/*.html",
+      "src/*.css",
+      "src/*.js"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "bin"
+      },
+      {
+        "from": "dist/node_modules",
+        "to": "bin/node_modules",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  },
+  "description": "Local file conversion for desktop and shell menus"
+}

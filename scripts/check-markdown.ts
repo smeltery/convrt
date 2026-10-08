@@ -3,7 +3,9 @@ import { $ } from 'bun'
 import { lint } from 'markdownlint/sync'
 
 const repoRoot = (await $`git rev-parse --show-toplevel`.text()).trim()
-const files = (await $`git ls-files -- "*.md"`.text())
+const files = (
+  await $`git ls-files --cached --others --exclude-standard -- "*.md"`.text()
+)
   .split('\n')
   .filter(Boolean)
   .map((file) => `${repoRoot}/${file}`)

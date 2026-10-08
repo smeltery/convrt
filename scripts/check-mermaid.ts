@@ -24,7 +24,9 @@ const mermaid = (await import('mermaid')).default
 mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' })
 
 const repoRoot = (await $`git rev-parse --show-toplevel`.text()).trim()
-const files = (await $`git ls-files -- "*.md" "*.mdx"`.text())
+const files = (
+  await $`git ls-files --cached --others --exclude-standard -- "*.md" "*.mdx"`.text()
+)
   .split('\n')
   .filter(Boolean)
 

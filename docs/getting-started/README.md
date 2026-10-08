@@ -22,6 +22,12 @@ bun run apps/cli/src/cli.ts slide.pdf --to png
 bun run apps/cli/src/cli.ts formats
 ```
 
+For an installed CLI, add `apps/desktop/dist` to your PATH after running
+`bun run --filter @convrt/desktop build`. Keep that directory intact.
+
+See [desktop setup](../desktop/README.md) for the window and shell menus and
+[Cloud API](../api/README.md) for explicit server-side conversion.
+
 Quality defaults to `82`. Override with `--quality 70`.
 
 ## Website

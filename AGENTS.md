@@ -1,11 +1,12 @@
 # convrt contributor instructions
 
-convrt converts files locally. The core promise is a Finder right-click (and a
-matching CLI) that never uploads bytes.
+convrt converts files locally through desktop, shell menus, and CLI.
+The separate Cloud API uploads only files explicitly sent by its clients.
 
 ## Product invariants
 
-- Conversion stays on-device.
+- Desktop, shell-menu, and CLI conversion stays on-device. Cloud conversion is
+  explicit and confined to `apps/api` and `packages/sdk`.
 - Do not send file contents, paths, sizes, or previews to analytics or logs.
 - Encode/decode belongs in `@convrt/core` engines (sharp, ffmpeg, pdf); UI and
   CLI must not call those engines directly.
@@ -16,6 +17,10 @@ matching CLI) that never uploads bytes.
 
 - `apps/cli`: argv and human-readable output.
 - `apps/web`: paper marketing site only.
+- `apps/desktop`: desktop UI and worker transport, never direct codecs.
+- `apps/api`: authenticated uploads, job lifecycle, and isolated workers.
+- `packages/sdk`: explicit Cloud API client.
+- `integrations`: Windows and Linux shell installers.
 - `packages/core`: format table + conversion.
 - `macos/quick-action`: Automator service wrapper.
 - `docs/`: user-facing documentation with mermaid diagrams.

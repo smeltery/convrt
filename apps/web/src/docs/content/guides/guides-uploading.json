@@ -1,0 +1,58 @@
+{
+  "path": "/docs/guides/uploading",
+  "title": "Uploading files",
+  "group": "Guides",
+  "description": "Send multipart data directly to your conversion server.",
+  "sections": [
+    {
+      "id": "fields",
+      "title": "Upload fields",
+      "paragraphs": [],
+      "table": [
+        ["Field", "Value"],
+        ["file", "A binary file with a recognizable filename extension."],
+        ["to", "Target format ID, such as webp."],
+        ["options", "Optional JSON object with conversion controls."]
+      ]
+    },
+    {
+      "id": "request",
+      "title": "Submit the request",
+      "paragraphs": [
+        "Let curl or FormData set the Content-Type boundary. The total multipart request, including overhead, must fit within 25 MiB. The server accepts four uploads at once."
+      ],
+      "code": "curl --fail-with-body \"$CONVRT_API_URL/v1/jobs\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\" \\\n  -F \"file=@photo.png\" -F \"to=webp\" \\\n  -F 'options={\"quality\":80}'",
+      "language": "Shell"
+    },
+    {
+      "id": "validation",
+      "title": "Validation",
+      "paragraphs": [
+        "The server checks the filename extension, target, installed conversion route, and controls before creating a job. Unsupported routes return 422. Paths and arbitrary codec arguments are rejected."
+      ],
+      "links": [
+        {
+          "label": "Conversion controls",
+          "href": "/docs/reference/options"
+        }
+      ]
+    },
+    {
+      "id": "filename",
+      "title": "Use a recognizable extension",
+      "paragraphs": [
+        "Input format detection uses the uploaded file\u2019s filename extension. Supply photo.png rather than an extensionless name when constructing a File or multipart upload. A content-type hint is not a substitute for that name.",
+        "The server does not expose the original filename in public job responses. It converts from private temporary paths and returns a generic attachment filename for the result."
+      ]
+    },
+    {
+      "id": "options-example",
+      "title": "Attach conversion controls",
+      "paragraphs": [
+        "options is a JSON string, not separate multipart fields for each control. Let FormData set the multipart boundary; manually setting Content-Type without a matching boundary prevents the server from parsing the body."
+      ],
+      "code": "const body = new FormData();\nbody.set(\"file\", file);\nbody.set(\"to\", \"webp\");\nbody.set(\"options\", JSON.stringify({ quality: 80, width: 1600 }));\nconst response = await fetch(`${baseUrl}/v1/jobs`, {\n  method: \"POST\",\n  headers: { Authorization: `Bearer ${apiKey}` },\n  body,\n  redirect: \"error\",\n});\nif (!response.ok) throw new Error(`Upload failed (${response.status})`);\nconst job = await response.json();",
+      "language": "JavaScript"
+    }
+  ]
+}

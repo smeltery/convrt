@@ -1,0 +1,62 @@
+{
+  "path": "/docs/reference/formats",
+  "title": "Formats",
+  "group": "Reference",
+  "description": "Discover formats and the routes installed on your server.",
+  "sections": [
+    {
+      "id": "catalog",
+      "title": "Format families",
+      "paragraphs": [],
+      "table": [
+        ["Family", "Formats"],
+        [
+          "Images",
+          "JPEG PNG WEBP AVIF GIF TIFF SVG HEIC HEIF BMP ICO TGA PPM QOI EXR"
+        ],
+        ["Video", "MP4 MOV WEBM MKV AVI"],
+        ["Audio", "MP3 WAV FLAC AAC M4A OGG OPUS"],
+        [
+          "Documents",
+          "PDF DOC DOCX ODT RTF TXT HTML XLS XLSX ODS CSV PPT PPTX ODP"
+        ]
+      ]
+    },
+    {
+      "id": "routes",
+      "title": "Availability depends on engines",
+      "paragraphs": [
+        "GET /v1/formats returns known formats, not a guarantee that every pair works. The server discovers routes up to three steps using installed engines. SVG and HEIC/HEIF are input-only. HEIC/HEIF requires macOS sips and is unavailable in the Linux Docker image.",
+        "sharp handles common raster formats; FFmpeg handles audio, video, and additional images; Poppler renders PDF pages; LibreOffice handles Office files. Query targets on the machine running conversion."
+      ],
+      "code": "convrt engines\nconvrt targets photo.png\nconvrt targets report.docx",
+      "language": "Shell"
+    },
+    {
+      "id": "choosing",
+      "title": "Choose a route for your deployment",
+      "paragraphs": [
+        "A route can combine multiple engines, such as converting an Office document to PDF and rendering a page as an image. Required tools must be installed on the same machine that runs the worker. A catalog entry alone does not guarantee that route.",
+        "HEIC and HEIF use macOS sips for decoding. The Linux Docker image cannot provide that macOS-only engine. Common raster, media, PDF, and Office workflows use the engines bundled in the image, subject to codec availability."
+      ]
+    },
+    {
+      "id": "testing",
+      "title": "Verify representative files",
+      "paragraphs": [
+        "Test real input variants that your application expects before advertising a format. A container extension does not identify every possible media codec, and an Office format may contain features that render differently through LibreOffice.",
+        "Use a fixture conversion to validate each supported application workflow. For server-side PDF image output, specify one page; the CLI\u2019s local batch workflow supports expanding multiple pages into separate outputs."
+      ],
+      "links": [
+        {
+          "label": "Upload controls",
+          "href": "/docs/reference/options"
+        },
+        {
+          "label": "Engine-dependent errors",
+          "href": "/docs/reference/errors"
+        }
+      ]
+    }
+  ]
+}

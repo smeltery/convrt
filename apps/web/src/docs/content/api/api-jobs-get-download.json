@@ -1,0 +1,53 @@
+{
+  "path": "/docs/api/jobs/get-download",
+  "title": "Download output",
+  "group": "API endpoints",
+  "description": "After success, returns output bytes with HTTP 200, application/octet-stream, and an attachment filename. Requires the owner key. Before success returns 409; missing jobs return 404.",
+  "sections": [
+    {
+      "id": "request",
+      "title": "GET /v1/jobs/{id}/download",
+      "paragraphs": ["Every request requires Authorization: Bearer <key>."],
+      "code": "curl --fail-with-body -X GET \"$CONVRT_API_URL/v1/jobs/$JOB_ID/download\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\" --output photo.webp",
+      "language": "cURL"
+    },
+    {
+      "id": "response",
+      "title": "Behavior",
+      "paragraphs": [
+        "After success, returns output bytes with HTTP 200, application/octet-stream, and an attachment filename. Requires the owner key. Before success returns 409; missing jobs return 404."
+      ],
+      "links": [
+        {
+          "label": "Lifecycle",
+          "href": "/docs/guides/job-lifecycle"
+        },
+        {
+          "label": "Errors",
+          "href": "/docs/reference/errors"
+        }
+      ]
+    },
+    {
+      "id": "headers",
+      "title": "Response headers",
+      "paragraphs": [
+        "The body is the converted file itself. Do not parse it as JSON. The server uses a generic attachment name; choose the application\u2019s preferred filename when saving."
+      ],
+      "table": [
+        ["Header", "Value"],
+        ["Content-Type", "application/octet-stream"],
+        ["Content-Disposition", "attachment; filename=\"converted.<format>\""],
+        ["Cache-Control", "no-store"]
+      ]
+    },
+    {
+      "id": "saving",
+      "title": "Downloading and cleanup",
+      "paragraphs": [
+        "Repeated downloads are allowed while the job is retained and the same key is valid. If a transfer fails, discard or replace its partial output before retrying. Save to a new or temporary path to protect existing files.",
+        "Download requires succeeded. A failed job also returns 409 rather than returning an error document as a file. Read the job status to distinguish waiting from conversion failure. Delete only after your application has saved the output."
+      ]
+    }
+  ]
+}

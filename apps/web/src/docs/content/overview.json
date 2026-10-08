@@ -1,0 +1,116 @@
+{
+  "path": "/docs",
+  "title": "Overview",
+  "group": "Start here",
+  "description": "What convrt does, how a conversion moves through the API, and how to choose the right integration.",
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Convert files where your application needs them",
+      "paragraphs": [
+        "convrt converts images, audio, video, PDFs, and Office documents using native engines. The API gives your application an authenticated way to submit a file and retrieve the converted output from a server you operate. Use it for a web application, a background task, or a pipeline that already handles files remotely.",
+        "For a file on your own computer, the desktop app and CLI provide local conversion without an API key or an upload. Finder, Explorer, and Linux file-manager integrations make that local workflow available from your file browser. The website itself is a marketing and documentation site; it does not convert visitor uploads."
+      ]
+    },
+    {
+      "id": "workflow",
+      "title": "How a conversion works",
+      "paragraphs": [
+        "Each API conversion is a job. A single multipart request uploads the input and chooses the output format. The API validates that an installed engine can handle the route, stores the input, and schedules a worker. You receive a job ID rather than waiting on the original upload request for the entire conversion.",
+        "Your client polls the job until its status is succeeded or failed. After success, download returns the file bytes directly. Uploads, status requests, downloads, and deletions all use the same bearer token. There is no separate upload reservation or start call."
+      ],
+      "diagram": "conversion",
+      "items": [
+        "Create: POST /v1/jobs with file, to, and optional options. Keep the returned id.",
+        "Wait: GET /v1/jobs/{id} until succeeded or failed, with a client-side deadline.",
+        "Save: GET /v1/jobs/{id}/download using the owner key. Choose the output filename in your application.",
+        "Clean up: DELETE /v1/jobs/{id} once you no longer need its files."
+      ]
+    },
+    {
+      "id": "requirements",
+      "title": "What you need",
+      "paragraphs": [
+        "Start with a server running the API and the engines required for your files. The Docker deployment includes FFmpeg, Poppler, LibreOffice, and the sharp dependencies. The source checkout also lets you run the server directly with Bun.",
+        "Configure at least one random key of 32 or more characters in CONVRT_API_KEYS. Keep that value in a secret manager and load it only in trusted server code. Your application uses CONVRT_API_URL and CONVRT_API_KEY to identify the service and authenticate."
+      ],
+      "items": [
+        "Docker for the self-hosted deployment, or Bun and the required engines for source mode.",
+        "A supported input file and a writable place to save the output.",
+        "HTTPS through a reverse proxy when calling from outside loopback.",
+        "A backend route when integrating with a browser application."
+      ],
+      "links": [
+        {
+          "label": "Start your first conversion",
+          "href": "/docs/quick-start"
+        },
+        {
+          "label": "Configure credentials",
+          "href": "/docs/guides/authentication"
+        }
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "title": "Results, failure, and retention",
+      "paragraphs": [
+        "Jobs move from queued to running and then to succeeded or failed. A valid upload can still fail during decoding or conversion, so treat acceptance and completion as separate outcomes. Read the error field on failed jobs before deciding whether another attempt is useful.",
+        "The default expiry starts one hour after creation and refreshes to one hour after the conversion finishes. Use the expiresAt timestamp returned by the server instead of calculating your own deadline. Automatic cleanup runs every minute; explicit deletion releases files sooner.",
+        "Docker uses persistent storage. Queued and completed jobs survive a restart, while interrupted running jobs become failed. Your keys must stay stable for clients to retain access to the jobs they own."
+      ],
+      "links": [
+        {
+          "label": "Understand the lifecycle",
+          "href": "/docs/guides/job-lifecycle"
+        },
+        {
+          "label": "Handle errors and retries",
+          "href": "/docs/guides/errors-and-retries"
+        }
+      ]
+    },
+    {
+      "id": "hosting",
+      "title": "Hosting and operational costs",
+      "paragraphs": [
+        "convrt provides a self-hosted API, not a managed billing service. You supply the compute, disk, networking, and TLS configuration. There is no convrt account, payment plan, or per-conversion charge implemented by this API. The repository license still applies to use of the software.",
+        "The bundled deployment is intended for a trusted operator. Jobs share a container and data volume. Before accepting untrusted uploads from multiple customers, add per-job isolation, application authentication, storage quotas, and appropriate operational controls."
+      ]
+    },
+    {
+      "id": "base-url",
+      "title": "Base URL",
+      "paragraphs": [
+        "Local Docker deployments expose the gateway at http://127.0.0.1:8787. Use your own HTTPS origin for remote clients and keep it in one environment variable. The SDK refuses remote plain HTTP and does not follow credential-bearing redirects."
+      ],
+      "code": "export CONVRT_API_URL=\"http://127.0.0.1:8787\"\ncurl \"$CONVRT_API_URL/health\"",
+      "language": "Shell"
+    },
+    {
+      "id": "next-steps",
+      "title": "Where to go next",
+      "paragraphs": [
+        "The quick start takes you from a running server to a downloaded file. The API reference describes individual calls, and the examples provide complete programs with timeouts and cleanup."
+      ],
+      "links": [
+        {
+          "label": "Quick start",
+          "href": "/docs/quick-start"
+        },
+        {
+          "label": "API reference",
+          "href": "/docs/api"
+        },
+        {
+          "label": "Runnable examples",
+          "href": "/docs/examples"
+        },
+        {
+          "label": "Available formats",
+          "href": "/docs/reference/formats"
+        }
+      ]
+    }
+  ]
+}

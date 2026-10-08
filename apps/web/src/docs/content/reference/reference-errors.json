@@ -1,0 +1,66 @@
+{
+  "path": "/docs/reference/errors",
+  "title": "Error reference",
+  "group": "Reference",
+  "description": "Request errors and conversion failure states.",
+  "sections": [
+    {
+      "id": "http",
+      "title": "HTTP errors",
+      "paragraphs": [],
+      "table": [
+        ["Status", "Typical message"],
+        [
+          "400",
+          "file and to are required; invalid options JSON; invalid conversion controls"
+        ],
+        ["401", "unauthorized"],
+        ["404", "not found"],
+        ["405", "method not allowed"],
+        ["409", "output not ready; job is running"],
+        ["413", "upload too large"],
+        ["415", "multipart/form-data required"],
+        ["422", "unsupported conversion or missing engine"],
+        ["429", "too many concurrent uploads; job capacity reached"],
+        ["500", "internal error"]
+      ]
+    },
+    {
+      "id": "jobs",
+      "title": "Job failures",
+      "paragraphs": [
+        "A job can return HTTP 200 with status failed and an error field. Conversion diagnostics are intentionally not returned. Interrupted durable jobs report conversion_interrupted. Correct the input or underlying worker problem before resubmitting."
+      ],
+      "links": [
+        {
+          "label": "Retry guidance",
+          "href": "/docs/guides/errors-and-retries"
+        }
+      ]
+    },
+    {
+      "id": "failure-codes",
+      "title": "Worker failure values",
+      "paragraphs": [],
+      "table": [
+        ["Job error", "Interpretation"],
+        [
+          "conversion_failed",
+          "The worker could not complete the conversion, including timeout."
+        ],
+        [
+          "conversion_interrupted",
+          "A durable job was running when the server restarted."
+        ]
+      ]
+    },
+    {
+      "id": "diagnostics",
+      "title": "Keep diagnostics separate from client responses",
+      "paragraphs": [
+        "Detailed codec output can include paths or file metadata, so API responses deliberately return limited messages. Client applications should display a concise failure explanation and avoid logging uploads, names, or previews.",
+        "When investigating a failure, first reproduce it with a synthetic fixture on the server and check installed engine availability. A known-good small file helps distinguish an input problem from an installation problem."
+      ]
+    }
+  ]
+}

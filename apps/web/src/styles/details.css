@@ -55,30 +55,3 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.closing {
-  text-align: center;
-  padding: 20px 0 90px;
-}
-.wordmark {
-  display: block;
-  font-size: 46px;
-  margin-bottom: 24px;
-  color: #7b866c;
-}
-.closing .btn {
-  margin-top: 28px;
-}
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  padding: 25px 0 32px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 11px;
-}
-.footer .brand {
-  color: var(--ink);
-  font-size: 20px;
-}

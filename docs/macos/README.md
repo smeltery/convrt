@@ -13,7 +13,9 @@ sequenceDiagram
 
   User->>Finder: Right-click file
   Finder->>Service: Convert with convrt
-  Service->>CLI: convrt path --to webp
+  Service->>CLI: Query available targets
+  Service-->>User: Choose target format
+  Service->>CLI: Convert selected files to target
   CLI->>Core: convert(...)
   Core-->>CLI: ConvertResult
   CLI-->>Service: exit 0
@@ -28,8 +30,8 @@ chmod +x macos/quick-action/install.sh
 ```
 
 `convrt` must already be on your `PATH`, plus `ffmpeg` and `pdftoppm` for
-AV/PDF conversions. Pass a target format as the first argument (default
-`webp`); remaining args are selected file paths.
+AV/PDF conversions. Finder passes selected file paths as arguments. The service
+queries targets for the first selection and asks you to choose a format.
 
 ## Privacy
 

@@ -1,0 +1,42 @@
+{
+  "path": "/docs/examples/node-script",
+  "title": "Node helper",
+  "group": "Examples",
+  "description": "A dependency-free helper for Node 22 or newer.",
+  "sections": [
+    {
+      "id": "helper",
+      "title": "Save as convert.mjs",
+      "paragraphs": [
+        "Uploads a file, polls with a deadline, writes without overwriting, and attempts cleanup. Uploads are not retried automatically. The helper buffers input and output in memory within the API size limit."
+      ],
+      "code": "import { readFile, writeFile } from \"node:fs/promises\";\nimport { basename } from \"node:path\";\n\nexport async function convertFile(input, to, output) {\n  const base = process.env.CONVRT_API_URL;\n  const key = process.env.CONVRT_API_KEY;\n  if (!base || !key) throw new Error(\"Set API URL and key\");\n  const origin = new URL(base);\n  if (origin.protocol !== \"https:\" &&\n      !(origin.protocol === \"http:\" && [\"localhost\", \"127.0.0.1\", \"[::1]\"].includes(origin.hostname)))\n    throw new Error(\"Use HTTPS outside loopback\");\n  const signal = AbortSignal.timeout(180000);\n  const headers = { Authorization: `Bearer ${key}` };\n  async function request(path, init = {}) {\n    const response = await fetch(new URL(path, origin), {\n      ...init, headers, signal, redirect: \"error\",\n    });\n    if (!response.ok) throw new Error(`API HTTP ${response.status}`);\n    return response;\n  }\n  const body = new FormData();\n  body.set(\"file\", new File([await readFile(input)], basename(input)));\n  body.set(\"to\", to);\n  let job = await (await request(\"/v1/jobs\", { method: \"POST\", body })).json();\n  try {\n    while ([\"queued\", \"running\"].includes(job.status)) {\n      await new Promise(resolve => setTimeout(resolve, 1000));\n      job = await (await request(`/v1/jobs/${job.id}`)).json();\n    }\n    if (job.status !== \"succeeded\") throw new Error(job.error ?? \"Conversion failed\");\n    const result = await request(`/v1/jobs/${job.id}/download`);\n    await writeFile(output, new Uint8Array(await result.arrayBuffer()), { flag: \"wx\" });\n  } finally {\n    const cleanup = await fetch(new URL(`/v1/jobs/${job.id}`, origin), {\n      method: \"DELETE\", headers, redirect: \"error\", signal: AbortSignal.timeout(10000),\n    }).catch(() => undefined);\n    if (!cleanup || ![204, 404].includes(cleanup.status))\n      console.error(\"Cleanup deferred; server retention still applies.\");\n  }\n}",
+      "language": "JavaScript"
+    },
+    {
+      "id": "run",
+      "title": "Run the helper",
+      "paragraphs": [],
+      "code": "import { convertFile } from \"./convert.mjs\";\nawait convertFile(\"photo.png\", \"webp\", \"photo.webp\");",
+      "language": "JavaScript"
+    },
+    {
+      "id": "operating",
+      "title": "Before using this in an application",
+      "paragraphs": [
+        "Run the example with a small synthetic input first, using a server whose engines support the chosen route. Set CONVRT_API_URL to your server origin and load CONVRT_API_KEY from the environment. Keep the key out of browser code and committed configuration.",
+        "Choose an output directory appropriate for private files. A successful conversion does not imply that the result is safe to publish; your application decides who can access it and when to delete it."
+      ],
+      "links": [
+        {
+          "label": "Understand failures and retries",
+          "href": "/docs/guides/errors-and-retries"
+        },
+        {
+          "label": "Capacity and retention",
+          "href": "/docs/reference/limits"
+        }
+      ]
+    }
+  ]
+}

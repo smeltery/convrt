@@ -1,21 +1,24 @@
+import { loadSharp } from './image-library.ts'
 import { ConvertError } from '../errors.ts'
-import type { SupportedFormat } from '../formats.ts'
+import type { EngineOptions } from '../options.ts'
 
-export async function convertWithSharp(options: {
-  input: string
-  output: string
-  to: SupportedFormat
-  quality: number
-}): Promise<void> {
+export async function convertWithSharp(options: EngineOptions): Promise<void> {
   let sharp: typeof import('sharp')
   try {
-    sharp = (await import('sharp')).default
+    sharp = await loadSharp()
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error)
     throw new ConvertError(`image engine unavailable: ${detail}`)
   }
 
-  let pipeline = sharp(options.input, { failOn: 'none' }).rotate()
+  let pipeline = sharp(options.input, { failOn: 'error' }).rotate()
+  if (options.width || options.height)
+    pipeline = pipeline.resize({
+      width: options.width,
+      height: options.height,
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
   const { to, quality } = options
   if (to === 'png') pipeline = pipeline.png()
   else if (to === 'jpeg' || to === 'jpg') {

@@ -1,0 +1,42 @@
+{
+  "path": "/docs/examples/shell-script",
+  "title": "Shell script",
+  "group": "Examples",
+  "description": "Convert with Bash, curl, and jq.",
+  "sections": [
+    {
+      "id": "script",
+      "title": "Save as convert.sh",
+      "paragraphs": [
+        "Requires curl with --fail-with-body support and jq. Use an HTTPS base URL outside loopback. The script checks for existing output before starting; use a dedicated output directory to avoid concurrent writers."
+      ],
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\n: \"${CONVRT_API_URL:?Set API URL}\"\n: \"${CONVRT_API_KEY:?Set API key}\"\ninput=${1:?Input file}\ntarget=${2:?Target format}\noutput=${3:?Output file}\n[[ ! -e \"$output\" ]] || { echo \"Output exists\" >&2; exit 1; }\njob_id=''\ncleanup() {\n  if [[ -n \"$job_id\" ]]; then\n    curl --silent --show-error --fail --max-time 10 -X DELETE \\\n      -H \"Authorization: Bearer $CONVRT_API_KEY\" \\\n      \"$CONVRT_API_URL/v1/jobs/$job_id\" >/dev/null ||\n      echo \"Cleanup deferred; retention still applies\" >&2\n  fi\n}\ntrap cleanup EXIT\njob=$(curl --silent --show-error --fail-with-body --max-time 60 \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\" \\\n  -F \"file=@$input\" -F \"to=$target\" \"$CONVRT_API_URL/v1/jobs\")\njob_id=$(jq -er '.id' <<<\"$job\")\nfor ((attempt=0; attempt<180; attempt++)); do\n  job=$(curl --silent --show-error --fail-with-body --max-time 10 \\\n    -H \"Authorization: Bearer $CONVRT_API_KEY\" \"$CONVRT_API_URL/v1/jobs/$job_id\")\n  status=$(jq -er '.status' <<<\"$job\")\n  if [[ \"$status\" == succeeded ]]; then\n    curl --silent --show-error --fail --max-time 60 \\\n      -H \"Authorization: Bearer $CONVRT_API_KEY\" \\\n      \"$CONVRT_API_URL/v1/jobs/$job_id/download\" --output \"$output\"\n    exit 0\n  fi\n  [[ \"$status\" != failed ]] || { echo \"Conversion failed\" >&2; exit 1; }\n  sleep 1\ndone\necho \"Timed out\" >&2\nexit 1",
+      "language": "Bash"
+    },
+    {
+      "id": "run",
+      "title": "Run",
+      "paragraphs": [],
+      "code": "bash convert.sh photo.png webp photo.webp",
+      "language": "Shell"
+    },
+    {
+      "id": "operating",
+      "title": "Before using this in an application",
+      "paragraphs": [
+        "Run the example with a small synthetic input first, using a server whose engines support the chosen route. Set CONVRT_API_URL to your server origin and load CONVRT_API_KEY from the environment. Keep the key out of browser code and committed configuration.",
+        "Choose an output directory appropriate for private files. A successful conversion does not imply that the result is safe to publish; your application decides who can access it and when to delete it."
+      ],
+      "links": [
+        {
+          "label": "Understand failures and retries",
+          "href": "/docs/guides/errors-and-retries"
+        },
+        {
+          "label": "Capacity and retention",
+          "href": "/docs/reference/limits"
+        }
+      ]
+    }
+  ]
+}

@@ -1,15 +1,15 @@
 # Documentation
 
-convrt is a local-first file converter. The CLI and macOS Quick Action call the
-same engine in [`packages/core`](../packages/core). Bytes never leave the
-machine.
+convrt provides local desktop, CLI, and file-manager conversion, plus a separate
+opt-in Cloud API. All encoding and decoding lives in `@convrt/core`.
 
 ```mermaid
 flowchart LR
-  finder["Finder / CLI"] --> cli["apps/cli"]
-  cli --> core["packages/core"]
+  local["Desktop / CLI / shell menus"] --> core["Conversion core"]
+  sdk["Explicit Cloud SDK upload"] --> api["Cloud API worker"]
+  api --> core
   core --> engines["Native engines"]
-  engines --> output["Converted file beside input"]
+  engines --> output["Converted output"]
 ```
 
 ## Guides
@@ -17,14 +17,17 @@ flowchart LR
 | Guide | Audience |
 | --- | --- |
 | [Getting started](getting-started/README.md) | New users and contributors |
-| [Formats](formats/README.md) | Supported formats and engines |
-| [macOS Quick Action](macos/README.md) | Right-click integration |
-| [Architecture](architecture/README.md) | How conversion is wired |
+| [Desktop and shell integration](desktop/README.md) | macOS, Windows, Linux users |
+| [Formats](formats/README.md) | Formats, routes, and controls |
+| [macOS Quick Action](macos/README.md) | Finder integration |
+| [Cloud API](api/README.md) | Developers and service operators |
+| [Architecture](architecture/README.md) | Package boundaries |
 | [Operations](operations/README.md) | CI, Flox, pre-commit, releases |
 
 ## Product invariants
 
-1. Conversion runs on-device.
-2. Input bytes are never uploaded, logged remotely, or sent to analytics.
-3. Output lands next to the input unless `--out` is set.
-4. Format support is explicit in docs and `listReadyFormats()`.
+1. Desktop, CLI, and shell-menu conversion stays on-device.
+2. Cloud conversion only receives files explicitly uploaded by its clients.
+3. File contents, paths, sizes, and previews are not sent to analytics or logs.
+4. Output publication protects existing files unless replacement is requested.
+5. Website and documentation distinguish implemented functionality from release readiness.

@@ -1,0 +1,45 @@
+{
+  "path": "/docs/examples/server-upload-route",
+  "title": "Server upload route",
+  "group": "Examples",
+  "description": "A bounded PNG upload handler using the workspace SDK.",
+  "sections": [
+    {
+      "id": "route",
+      "title": "Integrate with your backend",
+      "paragraphs": [
+        "The userId argument must come from your trusted authentication middleware, never from a form field. Configure per-user quotas and CSRF protection in that layer. Use a server runtime with a request timeout long enough for conversion.",
+        "This example leaves accepted jobs to the one-hour retention policy. For resumable jobs or immediate deletion, use createJob and persist the job ID against your application user."
+      ],
+      "code": "import { Convrt } from \"@convrt/sdk\";\n\n// Integrate with your framework's authenticated request handler.\nexport async function convertUpload(request: Request, userId: string | null) {\n  if (!userId) return new Response(\"Unauthorized\", { status: 401 });\n  const baseUrl = process.env.CONVRT_API_URL;\n  const apiKey = process.env.CONVRT_API_KEY;\n  if (!baseUrl || !apiKey) return new Response(\"Service unavailable\", { status: 503 });\n  const reader = request.body?.getReader();\n  if (!reader) return new Response(\"Missing body\", { status: 400 });\n  const chunks: Uint8Array<ArrayBuffer>[] = [];\n  let size = 0;\n  try {\n    while (true) {\n      const { done, value } = await reader.read();\n      if (done) break;\n      size += value.byteLength;\n      if (size > 20 * 1024 * 1024) {\n        await reader.cancel();\n        return new Response(\"Upload too large\", { status: 413 });\n      }\n      chunks.push(new Uint8Array(value));\n    }\n  } finally { reader.releaseLock(); }\n  const body = await new Response(new Blob(chunks), {\n    headers: { \"Content-Type\": request.headers.get(\"Content-Type\") ?? \"\" },\n  }).formData().catch(() => null);\n  const file = body?.get(\"file\");\n  if (!(file instanceof File) || !/\\.png$/i.test(file.name))\n    return new Response(\"Choose a PNG file\", { status: 400 });\n  try {\n    const client = new Convrt({ baseUrl, apiKey });\n    const output = await client.convert(file, \"webp\", {}, { signal: request.signal });\n    return new Response(output, { headers: {\n      \"Content-Type\": \"image/webp\", \"Cache-Control\": \"no-store\",\n      \"Content-Disposition\": 'attachment; filename=\"converted.webp\"',\n    } });\n  } catch { return new Response(\"Conversion unavailable\", { status: 502 }); }\n}",
+      "language": "TypeScript"
+    },
+    {
+      "id": "browser",
+      "title": "Send a selected file",
+      "paragraphs": [
+        "Run this from your form handler with a File from an input element. Do not add a convrt key to this request."
+      ],
+      "code": "const form = new FormData();\nform.set(\"file\", file);\nconst response = await fetch(\"/api/convert\", { method: \"POST\", body: form });\nif (!response.ok) throw new Error(\"Conversion failed\");\nconst output = await response.blob();",
+      "language": "JavaScript"
+    },
+    {
+      "id": "operating",
+      "title": "Before using this in an application",
+      "paragraphs": [
+        "Run the example with a small synthetic input first, using a server whose engines support the chosen route. Set CONVRT_API_URL to your server origin and load CONVRT_API_KEY from the environment. Keep the key out of browser code and committed configuration.",
+        "Choose an output directory appropriate for private files. A successful conversion does not imply that the result is safe to publish; your application decides who can access it and when to delete it."
+      ],
+      "links": [
+        {
+          "label": "Understand failures and retries",
+          "href": "/docs/guides/errors-and-retries"
+        },
+        {
+          "label": "Capacity and retention",
+          "href": "/docs/reference/limits"
+        }
+      ]
+    }
+  ]
+}

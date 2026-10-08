@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "bun run src/cli.ts",
-    "build": "bun build ./src/cli.ts --outdir dist --target bun --outfile convrt",
+    "build": "bun ../../packages/core/scripts/build-runtime.ts src/cli.ts dist/convrt",
     "test": "bun test",
     "lint": "bunx biome lint src",
     "typecheck": "tsc -p tsconfig.json --noEmit"

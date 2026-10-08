@@ -1,0 +1,42 @@
+{
+  "path": "/docs/examples/batch-folder",
+  "title": "Convert a folder",
+  "group": "Examples",
+  "description": "A sequential API batch that avoids overwhelming a small server.",
+  "sections": [
+    {
+      "id": "batch",
+      "title": "Save as batch.mjs",
+      "paragraphs": [
+        "Place this beside the Node helper. It converts PNG files at the top level, preserves existing outputs, and reports individual failures. Sequential operation keeps only one conversion active."
+      ],
+      "code": "import { readdir, mkdir } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { convertFile } from \"./convert.mjs\";\n\nconst input = process.argv[2] ?? \"photos\";\nconst output = process.argv[3] ?? \"converted\";\nawait mkdir(output, { recursive: true });\nfor (const entry of await readdir(input, { withFileTypes: true })) {\n  if (!entry.isFile() || !/\\.png$/i.test(entry.name)) continue;\n  try {\n    // Keep the original extension in the name to avoid collisions.\n    await convertFile(join(input, entry.name), \"webp\", join(output, `${entry.name}.webp`));\n  } catch (error) {\n    console.error(error instanceof Error ? error.message : \"Conversion failed\");\n    process.exitCode = 1;\n  }\n}",
+      "language": "JavaScript"
+    },
+    {
+      "id": "local",
+      "title": "Prefer local for local files",
+      "paragraphs": [],
+      "code": "node batch.mjs photos converted\n# Or convert locally without uploading:\nconvrt photos/ --to webp --recursive --jobs 2",
+      "language": "Shell"
+    },
+    {
+      "id": "operating",
+      "title": "Before using this in an application",
+      "paragraphs": [
+        "Run the example with a small synthetic input first, using a server whose engines support the chosen route. Set CONVRT_API_URL to your server origin and load CONVRT_API_KEY from the environment. Keep the key out of browser code and committed configuration.",
+        "Choose an output directory appropriate for private files. A successful conversion does not imply that the result is safe to publish; your application decides who can access it and when to delete it."
+      ],
+      "links": [
+        {
+          "label": "Understand failures and retries",
+          "href": "/docs/guides/errors-and-retries"
+        },
+        {
+          "label": "Capacity and retention",
+          "href": "/docs/reference/limits"
+        }
+      ]
+    }
+  ]
+}

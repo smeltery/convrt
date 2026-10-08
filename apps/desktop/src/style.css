@@ -1,0 +1,117 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  color: #20231e;
+  background: #faf8f1;
+}
+body {
+  margin: 0;
+}
+main {
+  max-width: 700px;
+  padding: 32px;
+  margin: auto;
+}
+header,
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+.brand {
+  font-weight: 850;
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.badge {
+  font-size: 11px;
+  color: #386640;
+  letter-spacing: 1px;
+}
+h1 {
+  font-size: 38px;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+p {
+  color: #64675c;
+}
+#drop {
+  padding: 20px;
+  border: 1px dashed #94998b;
+  border-radius: 12px;
+  margin: 24px 0;
+}
+#files {
+  max-height: 100px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  padding-left: 20px;
+}
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+input,
+select,
+button {
+  font: inherit;
+  padding: 10px;
+  border: 1px solid #b5b8ac;
+  border-radius: 6px;
+  background: #fffef9;
+  min-width: 0;
+}
+button {
+  cursor: pointer;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #649871;
+  outline-offset: 2px;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.actions {
+  margin: 20px 0;
+  font-size: 12px;
+}
+#destination {
+  overflow-wrap: anywhere;
+}
+#convert {
+  background: #234e32;
+  color: white;
+  width: 100%;
+}
+#status {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+pre {
+  white-space: pre-wrap;
+  font-size: 12px;
+}
+.advanced {
+  margin-top: 20px;
+}
+.advanced .fields {
+  margin-block: 16px;
+}
+.check {
+  flex-direction: row;
+  align-items: center;
+  margin-block: 12px;
+}

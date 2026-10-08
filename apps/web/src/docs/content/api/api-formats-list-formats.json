@@ -1,0 +1,43 @@
+{
+  "path": "/docs/api/formats/list-formats",
+  "title": "List formats",
+  "group": "API endpoints",
+  "description": "Read the known format catalog.",
+  "sections": [
+    {
+      "id": "request",
+      "title": "GET /v1/formats",
+      "paragraphs": [
+        "Requires a bearer token. Returns HTTP 200 with an array of format records from the core catalog. Routes depend on installed engines; the catalog itself is not a matrix of supported conversions."
+      ],
+      "code": "curl \"$CONVRT_API_URL/v1/formats\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\"",
+      "language": "cURL"
+    },
+    {
+      "id": "details",
+      "title": "Discover routes",
+      "paragraphs": [],
+      "links": [
+        {
+          "label": "Format reference",
+          "href": "/docs/reference/formats"
+        }
+      ]
+    },
+    {
+      "id": "contract",
+      "title": "Catalog and runtime availability",
+      "paragraphs": [
+        "This route lists known format records from the core format table. It requires authentication even though it does not contain job data. An available source or target in the catalog does not prove that the server can convert a specific pair.",
+        "Create-job validation discovers routes using the installed engines. If you build a format selector, validate actual application workflows against your deployed server and handle HTTP 422 for unavailable routes."
+      ]
+    },
+    {
+      "id": "operations",
+      "title": "Changes between environments",
+      "paragraphs": [
+        "Local macOS, Linux Docker, and custom worker installations can support different routes. In particular, macOS sips is not available in the Linux image. Recheck representative conversions after changing engine packages or deploying to another operating system."
+      ]
+    }
+  ]
+}

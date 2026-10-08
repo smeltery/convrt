@@ -1,0 +1,33 @@
+{
+  "path": "/docs/examples",
+  "title": "Examples",
+  "group": "Examples",
+  "description": "Runnable starting points for server-side file conversion.",
+  "sections": [
+    {
+      "id": "choose",
+      "title": "Choose an example",
+      "paragraphs": [
+        "All examples require a running server and CONVRT_API_URL / CONVRT_API_KEY in the environment."
+      ],
+      "links": [
+        {
+          "label": "Node helper",
+          "href": "/docs/examples/node-script"
+        },
+        {
+          "label": "Shell script",
+          "href": "/docs/examples/shell-script"
+        },
+        {
+          "label": "Server upload route",
+          "href": "/docs/examples/server-upload-route"
+        },
+        {
+          "label": "Convert a folder",
+          "href": "/docs/examples/batch-folder"
+        }
+      ]
+    }
+  ]
+}

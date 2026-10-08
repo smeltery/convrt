@@ -1,0 +1,49 @@
+{
+  "path": "/docs/guides/polling-and-downloading",
+  "title": "Polling and downloading",
+  "group": "Guides",
+  "description": "Wait for completion, save bytes, and release storage.",
+  "sections": [
+    {
+      "id": "poll",
+      "title": "Poll until terminal",
+      "paragraphs": [
+        "Read the job once per second in your own client, with an overall deadline. Stop at succeeded or failed. A 404 can mean expiration, deletion, or a job owned by a different key.",
+        "The workspace SDK polls every 250 ms and defaults to a 180-second client timeout. This timeout is separate from the worker timeout."
+      ]
+    },
+    {
+      "id": "download",
+      "title": "Download authenticated bytes",
+      "paragraphs": [
+        "After success, GET /v1/jobs/{id}/download returns application/octet-stream with an attachment filename of converted.<format>. Save it using your own output name. It is not a signed URL or JSON response.",
+        "A job produces one output. For PDF images, choose a page with the page option; use the local CLI for a multi-page batch."
+      ],
+      "code": "curl --fail-with-body \"$CONVRT_API_URL/v1/jobs/$JOB_ID/download\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\" --output photo.webp",
+      "language": "Shell"
+    },
+    {
+      "id": "cleanup",
+      "title": "Delete when finished",
+      "paragraphs": [
+        "DELETE /v1/jobs/{id} removes queued or completed jobs and files. Outputs otherwise remain until expiration."
+      ]
+    },
+    {
+      "id": "deadline",
+      "title": "Use a deadline, not an unbounded loop",
+      "paragraphs": [
+        "Choose a total wait budget that includes upload, queueing, and conversion. A two-minute worker limit does not guarantee that a queued job will finish within two minutes of creation. The SDK\u2019s default client timeout is three minutes; it can be changed per call.",
+        "Poll only while the status is queued or running. Avoid simultaneous overlapping polls for one job. On transient network errors, apply bounded backoff; on a failed job, stop and report the failure."
+      ]
+    },
+    {
+      "id": "saving",
+      "title": "Save safely",
+      "paragraphs": [
+        "Download using the same configured origin as the API and the same bearer token. The relative downloadUrl does not grant anonymous access. Avoid forwarding credentials to a URL supplied by an untrusted caller.",
+        "Write to a new output path or a temporary file that you rename after a complete download. If a network failure interrupts a download, retry while the job exists. A partial file on disk is not a successful conversion."
+      ]
+    }
+  ]
+}

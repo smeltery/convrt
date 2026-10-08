@@ -3,19 +3,20 @@ import { SITE } from '../lib/site.ts'
 export function Details() {
   return (
     <>
-      <section className="section shell privacy">
+      <section className="section shell privacy" id="privacy">
         <div className="privacy-mark" aria-hidden="true">
           ⌁
         </div>
         <p className="eyebrow">Your files are your business</p>
         <h2>
-          What’s on your Mac,
+          Local when you want it.
           <br />
-          <em>stays on your Mac.</em>
+          <em>Cloud when you choose it.</em>
         </h2>
         <p>
-          Photos, recordings, work in progress. convrt processes them on your
-          machine. No uploads, no conversion server, no account.
+          The desktop app, CLI, and shell menus process files on your machine.
+          The separate Cloud API uploads only the files you explicitly send to
+          your configured server.
         </p>
         <a
           className="text-link"
@@ -34,55 +35,63 @@ export function Details() {
         <details>
           <summary>Does anything get uploaded?</summary>
           <p>
-            No. The CLI and Finder Quick Action use local conversion engines.
-            Your files stay on your machine.
+            Desktop, CLI, and right-click conversions stay on-device. Cloud API
+            requests upload files to your chosen server; the website itself does
+            not process files.
           </p>
         </details>
         <details>
           <summary>How do I install it?</summary>
           <p>
-            convrt currently uses a command-line setup. Install the toolchain,
-            set up the CLI, then install the Finder Quick Action.{' '}
-            <a href={SITE.install}>Follow the setup guide ↗</a>
+            Build the desktop app from source for macOS, Windows, or Linux, or
+            run the CLI with Bun. Signed desktop downloads are not published
+            yet. <a href={SITE.install}>Follow the setup guide ↗</a>
           </p>
         </details>
         <details>
           <summary>Can I choose the output format?</summary>
           <p>
             Yes. Use the CLI’s <code>--to</code> option. The Finder Quick Action
-            defaults to WebP. <a href={SITE.finder}>Finder setup ↗</a>
+            asks you to pick an available target.{' '}
+            <a href={SITE.finder}>Finder setup ↗</a>
           </p>
         </details>
         <details>
           <summary>What happens to my original?</summary>
           <p>
             When converting to a different format, convrt writes the output
-            beside the source file. Choose a unique output name with the CLI’s
-            --out option if you already have a file with that name.
+            beside the source file. Existing outputs are protected by default.
+            Choose another folder or explicitly pass --overwrite to replace an
+            output.
           </p>
         </details>
       </section>
       <section className="section shell closing">
-        <span className="wordmark" aria-hidden="true">
-          ⇄
-        </span>
-        <h2>
-          A new format.
-          <br />
-          <em>And back to your day.</em>
-        </h2>
-        <a className="btn btn-primary" href={SITE.install}>
-          Get started with convrt <span aria-hidden="true">↗</span>
-        </a>
-        <p className="fine">On your machine. On your terms.</p>
+        <div className="closing-content">
+          <img src="/logo.svg" width="36" height="36" alt="" />
+          <h2>
+            Your files. A new format.
+            <br />
+            <em>Without the upload.</em>
+          </h2>
+          <p>
+            Convert on your computer with the desktop app or CLI.
+            <br />
+            Your files stay right where they belong.
+          </p>
+          <div className="closing-actions">
+            <a className="btn btn-primary" href={SITE.install}>
+              Get started with convrt <span aria-hidden="true">↗</span>
+            </a>
+            <a className="btn closing-secondary" href="#platforms">
+              Explore all platforms <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p className="closing-note">
+            Build from source · macOS, Windows &amp; Linux
+          </p>
+        </div>
       </section>
-      <footer className="footer shell">
-        <a className="brand" href="#top">
-          convrt.
-        </a>
-        <span>A small tool for your everyday files.</span>
-        <a href={SITE.github}>Source on GitHub ↗</a>
-      </footer>
     </>
   )
 }

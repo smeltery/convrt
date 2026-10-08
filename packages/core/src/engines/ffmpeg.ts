@@ -1,60 +1,38 @@
 import { ConvertError } from '../errors.ts'
-import type { SupportedFormat } from '../formats.ts'
+import { FORMATS } from '../formats.ts'
+import type { EngineOptions } from '../options.ts'
 
-async function haveFfmpeg(): Promise<boolean> {
-  const result = await Bun.$`ffmpeg -version`.quiet().nothrow()
-  return result.exitCode === 0
-}
-
-function argsFor(
-  input: string,
-  output: string,
-  to: SupportedFormat,
-  quality: number,
-): string[] {
-  const crf = String(Math.round(51 - (quality / 100) * 33))
-  const base = ['-y', '-i', input]
-  switch (to) {
-    case 'mp3':
-      return [...base, '-vn', '-c:a', 'libmp3lame', '-q:a', '2', output]
-    case 'aac':
-    case 'm4a':
-      return [...base, '-vn', '-c:a', 'aac', '-b:a', '192k', output]
-    case 'wav':
-      return [...base, '-vn', '-c:a', 'pcm_s16le', output]
-    case 'flac':
-      return [...base, '-vn', '-c:a', 'flac', output]
-    case 'ogg':
-      return [...base, '-vn', '-c:a', 'libvorbis', '-q:a', '5', output]
-    case 'mp4':
-      return [
-        ...base,
-        '-c:v',
-        'libx264',
-        '-pix_fmt',
-        'yuv420p',
-        '-crf',
-        crf,
-        '-c:a',
-        'aac',
-        output,
-      ]
-    case 'mov':
-      return [
-        ...base,
-        '-c:v',
-        'libx264',
-        '-pix_fmt',
-        'yuv420p',
-        '-crf',
-        crf,
-        '-c:a',
-        'aac',
-        output,
-      ]
-    case 'webm':
-      return [
-        ...base,
+export async function convertWithFfmpeg(options: EngineOptions): Promise<void> {
+  if (!Bun.which('ffmpeg'))
+    throw new ConvertError('ffmpeg not found on PATH; install ffmpeg')
+  const { input, output, to, quality } = options
+  const args = ['-nostdin', '-v', 'error', '-y']
+  if (options.start !== undefined) args.push('-ss', String(options.start))
+  args.push('-protocol_whitelist', 'file,pipe', '-i', input)
+  if (options.duration !== undefined) args.push('-t', String(options.duration))
+  const family = FORMATS[to].family
+  if (family !== 'audio') {
+    if (options.width || options.height)
+      args.push(
+        '-vf',
+        `scale=${options.width ?? -2}:${options.height ?? -2}:force_original_aspect_ratio=decrease`,
+      )
+    if (options.fps) args.push('-r', String(options.fps))
+  }
+  const crf = String(Math.round(51 - quality * 0.33))
+  const audio: Record<string, string[]> = {
+    mp3: ['libmp3lame', '-q:a', String(Math.round((100 - quality) * 0.09))],
+    aac: ['aac', '-b:a', '192k'],
+    m4a: ['aac', '-b:a', '192k'],
+    wav: ['pcm_s16le'],
+    flac: ['flac'],
+    ogg: ['libvorbis', '-q:a', '5'],
+    opus: ['libopus', '-b:a', '128k'],
+  }
+  if (family === 'audio') args.push('-vn', '-c:a', ...(audio[to] ?? []))
+  else if (family === 'video') {
+    if (to === 'webm')
+      args.push(
         '-c:v',
         'libvpx-vp9',
         '-b:v',
@@ -63,11 +41,11 @@ function argsFor(
         crf,
         '-c:a',
         'libopus',
-        output,
-      ]
-    case 'mkv':
-      return [
-        ...base,
+      )
+    else if (to === 'avi')
+      args.push('-c:v', 'mpeg4', '-q:v', '3', '-c:a', 'libmp3lame')
+    else
+      args.push(
         '-c:v',
         'libx264',
         '-pix_fmt',
@@ -76,41 +54,20 @@ function argsFor(
         crf,
         '-c:a',
         'aac',
-        output,
-      ]
-    case 'png':
-    case 'jpeg':
-    case 'jpg':
-    case 'webp':
-      return [...base, '-frames:v', '1', output]
-    default:
-      throw new ConvertError(`ffmpeg cannot encode ${to}`)
-  }
-}
-
-export async function convertWithFfmpeg(options: {
-  input: string
-  output: string
-  to: SupportedFormat
-  quality: number
-}): Promise<void> {
-  if (!(await haveFfmpeg())) {
-    throw new ConvertError('ffmpeg not found on PATH; install ffmpeg')
-  }
-  const argv = argsFor(
-    options.input,
-    options.output,
-    options.to,
-    options.quality,
-  )
-  const result = await Bun.$`ffmpeg ${argv}`.quiet().nothrow()
-  if (result.exitCode !== 0) {
-    await Bun.$`rm -f ${options.output}`.quiet().nothrow()
-    const err =
-      result.stderr.toString().trim().split('\n').at(-1) ?? 'encode failed'
-    throw new ConvertError(`ffmpeg failed: ${err}`)
-  }
-  if (!(await Bun.file(options.output).exists())) {
-    throw new ConvertError('ffmpeg produced no output file')
-  }
+      )
+    if (options.mute) args.push('-an')
+  } else if (family === 'image') {
+    args.push('-frames:v', '1')
+    if (to === 'ico')
+      args.push('-vf', 'scale=256:256:force_original_aspect_ratio=decrease')
+  } else throw new ConvertError(`ffmpeg cannot encode ${to}`)
+  args.push(output)
+  const child = Bun.spawn(['ffmpeg', ...args], {
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+  if ((await child.exited) !== 0)
+    throw new ConvertError(
+      'ffmpeg conversion failed; check input and installed codecs',
+    )
 }

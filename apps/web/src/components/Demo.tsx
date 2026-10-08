@@ -76,7 +76,10 @@ export function ConversionDemo() {
               </span>
               <span className="menu-divider">Quick Look</span>
               <button type="button" onClick={() => setConverted(true)}>
-                <span>⇄ &nbsp; Convert with convrt</span>
+                <span className="conversion-menu-label">
+                  <img src="/logo.svg" width="22" height="22" alt="" />
+                  Convert with convrt
+                </span>
                 <b>↵</b>
               </button>
               <span className="menu-hint">PNG → WebP · on your Mac</span>

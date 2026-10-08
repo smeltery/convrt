@@ -1,0 +1,57 @@
+{
+  "path": "/docs/guides/browser-apps",
+  "title": "Browser apps",
+  "group": "Guides",
+  "description": "Keep API keys on your server while accepting user-selected files.",
+  "sections": [
+    {
+      "id": "architecture",
+      "title": "Browser \u2192 your backend \u2192 convrt",
+      "paragraphs": [
+        "Send the browser file to a same-origin backend route. Your backend authenticates the user, validates the size and type, and forwards the file to convrt using a server-held key.",
+        "Return the converted bytes through your backend. A plain browser download link to convrt cannot attach a bearer token. No public cross-origin browser access is configured by the API."
+      ],
+      "diagram": "browser"
+    },
+    {
+      "id": "production",
+      "title": "Application responsibilities",
+      "paragraphs": [],
+      "items": [
+        "Authenticate users before forwarding uploads.",
+        "Enforce upload limits while reading the body, not only after parsing.",
+        "Bound concurrency and storage per user.",
+        "Store job ownership in your application when returning early for longer conversions.",
+        "Handle CSRF when cookie-based authentication is used."
+      ],
+      "links": [
+        {
+          "label": "Server upload route example",
+          "href": "/docs/examples/server-upload-route"
+        }
+      ]
+    },
+    {
+      "id": "long-jobs",
+      "title": "Return early for longer conversions",
+      "paragraphs": [
+        "For quick image work, your backend can wait and return bytes in one request. For longer work, upload and return an application job identifier immediately. Provide separate authenticated status and download routes that resolve it to the convrt job ID.",
+        "Persist the association between the application user and the job. A shared convrt API key cannot distinguish your users, and exposing a raw ID does not replace an authorization check."
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "Deliver the result",
+      "paragraphs": [
+        "Your backend should set an appropriate content type and Content-Disposition when returning a file, and disable caching for private results. Use a generated filename rather than reflecting an untrusted upload name into headers.",
+        "Keep the API key out of query strings and browser storage. The browser only needs your normal application authentication. Add CSRF protection for cookie-authenticated upload routes and enforce size limits while receiving the body."
+      ],
+      "links": [
+        {
+          "label": "Complete upload handler",
+          "href": "/docs/examples/server-upload-route"
+        }
+      ]
+    }
+  ]
+}

@@ -12,7 +12,11 @@ const budgets = JSON.parse(readFileSync(budgetsFile, 'utf8')) as {
   directories: Record<string, { limit: number; reason?: string }>
 }
 
-const tracked = (await $`git ls-files`.text()).split('\n').filter(Boolean)
+const tracked = (
+  await $`git ls-files --cached --others --exclude-standard`.text()
+)
+  .split('\n')
+  .filter(Boolean)
 const skip =
   /(^|\/)(node_modules|target|dist|build|deps|_build|site|fixtures|vendor)(\/|$)/
 const counts = new Map<string, number>()

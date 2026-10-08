@@ -1,0 +1,43 @@
+{
+  "path": "/docs/reference/options",
+  "title": "Conversion options",
+  "group": "Reference",
+  "description": "Validated controls accepted by multipart options and the SDK.",
+  "sections": [
+    {
+      "id": "controls",
+      "title": "Controls",
+      "paragraphs": [],
+      "table": [
+        ["Option", "Range"],
+        ["quality", "Integer 1\u2013100"],
+        ["width / height", "Integer 1\u201316384 pixels"],
+        ["page", "Integer 1\u2013100000"],
+        ["dpi", "Integer 1\u20131200"],
+        ["fps", "Number 1\u2013240"],
+        ["start", "Number 0\u2013864000 seconds"],
+        ["duration", "Number 0.001\u2013864000 seconds"],
+        ["mute", "Boolean"]
+      ]
+    },
+    {
+      "id": "usage",
+      "title": "Route-specific behavior",
+      "paragraphs": [
+        "Options apply only to relevant engines. A PDF job produces the selected page rather than an archive of all pages. Output paths, executable names, and arbitrary engine flags are rejected."
+      ],
+      "code": "{\"quality\":80,\"width\":1920}",
+      "language": "JSON"
+    },
+    {
+      "id": "examples",
+      "title": "Apply controls to the right job",
+      "paragraphs": [
+        "quality and image dimensions apply to suitable image or media routes. page and dpi control PDF rendering; start, duration, fps, and mute apply to appropriate media conversions. Supplying a valid option does not make every engine use it.",
+        "Numbers must be JSON numbers, not strings. Unknown keys, arrays instead of objects, and invalid ranges return HTTP 400 before a job is accepted."
+      ],
+      "code": "// Image output\n{ \"quality\": 80, \"width\": 1600 }\n\n// PDF page rendering\n{ \"page\": 3, \"dpi\": 150 }\n\n// Video excerpt\n{ \"start\": 5, \"duration\": 12, \"fps\": 24, \"mute\": true }",
+      "language": "JavaScript"
+    }
+  ]
+}

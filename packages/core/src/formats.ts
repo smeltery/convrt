@@ -1,5 +1,5 @@
 export type FormatFamily = 'image' | 'video' | 'audio' | 'document'
-export type EngineName = 'sharp' | 'ffmpeg' | 'pdf'
+export type EngineName = 'sharp' | 'ffmpeg' | 'pdf' | 'office' | 'sips'
 
 export type SupportedFormat =
   | 'png'
@@ -22,6 +22,28 @@ export type SupportedFormat =
   | 'flac'
   | 'ogg'
   | 'pdf'
+  | 'svg'
+  | 'bmp'
+  | 'ico'
+  | 'tga'
+  | 'ppm'
+  | 'qoi'
+  | 'exr'
+  | 'avi'
+  | 'opus'
+  | 'doc'
+  | 'docx'
+  | 'odt'
+  | 'rtf'
+  | 'txt'
+  | 'html'
+  | 'xls'
+  | 'xlsx'
+  | 'ods'
+  | 'csv'
+  | 'ppt'
+  | 'pptx'
+  | 'odp'
 
 export interface FormatInfo {
   id: SupportedFormat
@@ -44,6 +66,28 @@ type Row = [
 ]
 
 const ROWS: Row[] = [
+  ['svg', 'image', ['.svg'], 'image/svg+xml', false, 'sharp'],
+  ['bmp', 'image', ['.bmp'], 'image/bmp', true, 'ffmpeg'],
+  ['ico', 'image', ['.ico'], 'image/x-icon', true, 'ffmpeg'],
+  ['tga', 'image', ['.tga'], 'image/x-tga', true, 'ffmpeg'],
+  ['ppm', 'image', ['.ppm'], 'image/x-portable-pixmap', true, 'ffmpeg'],
+  ['qoi', 'image', ['.qoi'], 'image/qoi', true, 'ffmpeg'],
+  ['exr', 'image', ['.exr'], 'image/x-exr', true, 'ffmpeg'],
+  ['avi', 'video', ['.avi'], 'video/x-msvideo', true, 'ffmpeg'],
+  ['opus', 'audio', ['.opus'], 'audio/opus', true, 'ffmpeg'],
+  ['doc', 'document', ['.doc'], 'application/octet-stream', true, 'office'],
+  ['docx', 'document', ['.docx'], 'application/octet-stream', true, 'office'],
+  ['odt', 'document', ['.odt'], 'application/octet-stream', true, 'office'],
+  ['rtf', 'document', ['.rtf'], 'application/octet-stream', true, 'office'],
+  ['txt', 'document', ['.txt'], 'text/plain', true, 'office'],
+  ['html', 'document', ['.html'], 'application/octet-stream', true, 'office'],
+  ['xls', 'document', ['.xls'], 'application/octet-stream', true, 'office'],
+  ['xlsx', 'document', ['.xlsx'], 'application/octet-stream', true, 'office'],
+  ['ods', 'document', ['.ods'], 'application/octet-stream', true, 'office'],
+  ['csv', 'document', ['.csv'], 'application/octet-stream', true, 'office'],
+  ['ppt', 'document', ['.ppt'], 'application/octet-stream', true, 'office'],
+  ['pptx', 'document', ['.pptx'], 'application/octet-stream', true, 'office'],
+  ['odp', 'document', ['.odp'], 'application/octet-stream', true, 'office'],
   ['png', 'image', ['.png'], 'image/png', true, 'sharp'],
   ['jpeg', 'image', ['.jpeg', '.jpg'], 'image/jpeg', true, 'sharp'],
   ['jpg', 'image', ['.jpg', '.jpeg'], 'image/jpeg', true, 'sharp'],
@@ -86,7 +130,7 @@ export function formatFromPath(path: string): SupportedFormat | null {
 
 export function normalizeFormat(input: string): SupportedFormat | null {
   const key = input.trim().toLowerCase().replace(/^\./, '')
-  if (key in FORMATS) return key as SupportedFormat
+  if (Object.hasOwn(FORMATS, key)) return key as SupportedFormat
   return EXTENSION_MAP.get(`.${key}`) ?? null
 }
 
@@ -94,18 +138,4 @@ export function listReadyFormats(): FormatInfo[] {
   return Object.values(FORMATS).filter((f) => f.status === 'ready')
 }
 
-/** True when this pair is a supported offline conversion. */
-export function canConvert(
-  from: SupportedFormat,
-  to: SupportedFormat,
-): boolean {
-  if (from === to) return false
-  if (!FORMATS[to].encode) return false
-  const a = FORMATS[from].family
-  const b = FORMATS[to].family
-  if (a === b) return true
-  if (a === 'video' && (b === 'audio' || b === 'image')) return true
-  if (a === 'document' && b === 'image') return true
-  if (a === 'image' && to === 'pdf') return true
-  return false
-}
+export { canConvert, directEngine } from './format-rules.ts'

@@ -1,0 +1,62 @@
+{
+  "path": "/docs/api/jobs/reserve-job",
+  "title": "Create a job",
+  "group": "API endpoints",
+  "description": "Send multipart file, to, and optional JSON options. Success returns HTTP 202 and a job with id, status, createdAt, and expiresAt. The Location header points at the job. Uploading queues conversion automatically.",
+  "sections": [
+    {
+      "id": "request",
+      "title": "POST /v1/jobs",
+      "paragraphs": ["Every request requires Authorization: Bearer <key>."],
+      "code": "curl --fail-with-body -X POST \"$CONVRT_API_URL/v1/jobs\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\" \\\n  -F \"file=@photo.png\" -F \"to=webp\"",
+      "language": "cURL"
+    },
+    {
+      "id": "response",
+      "title": "Behavior",
+      "paragraphs": [
+        "Send multipart file, to, and optional JSON options. Success returns HTTP 202 and a job with id, status, createdAt, and expiresAt. The Location header points at the job. Uploading queues conversion automatically."
+      ],
+      "links": [
+        {
+          "label": "Lifecycle",
+          "href": "/docs/guides/job-lifecycle"
+        },
+        {
+          "label": "Errors",
+          "href": "/docs/reference/errors"
+        }
+      ]
+    },
+    {
+      "id": "fields",
+      "title": "Multipart fields",
+      "paragraphs": [
+        "The server reads the body before it creates the job. It detects the source format from the file extension and checks that installed engines can reach the requested target. A successful response includes a Location header with the status endpoint."
+      ],
+      "table": [
+        ["Field", "Required", "Description"],
+        ["file", "Yes", "Binary file with a supported extension."],
+        ["to", "Yes", "Target format ID, such as webp."],
+        ["options", "No", "JSON object containing conversion controls."]
+      ]
+    },
+    {
+      "id": "accepted",
+      "title": "Accepted response",
+      "paragraphs": [
+        "HTTP 202 means the upload was accepted. The worker may already have started by the time the response is returned. Your next step is to poll the ID, not to submit a second start request."
+      ],
+      "language": "JSON",
+      "code": "{\n  \"id\": \"8c6a3cda-05c0-4219-925a-18c1b1347d59\",\n  \"status\": \"running\",\n  \"createdAt\": \"2026-10-08T10:00:00.000Z\",\n  \"expiresAt\": \"2026-10-08T11:00:00.000Z\"\n}"
+    },
+    {
+      "id": "failures",
+      "title": "Common failures",
+      "paragraphs": [
+        "400 indicates missing fields or invalid controls; 413 indicates that the multipart body is too large; 415 indicates the wrong request content type; 422 indicates that the format or route is unavailable. Capacity exhaustion returns 429.",
+        "Do not automatically repeat POST after a timeout: the first request might have created a job even if its response was lost. This endpoint has no idempotency key."
+      ]
+    }
+  ]
+}

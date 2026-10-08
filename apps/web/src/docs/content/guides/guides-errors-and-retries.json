@@ -1,0 +1,57 @@
+{
+  "path": "/docs/guides/errors-and-retries",
+  "title": "Errors and retries",
+  "group": "Guides",
+  "description": "Recover from temporary failures without duplicating jobs.",
+  "sections": [
+    {
+      "id": "shape",
+      "title": "Read status and message",
+      "paragraphs": [
+        "API errors use a simple object such as {\"error\":\"job capacity reached\"}. Branch primarily on HTTP status; do not expect nested error.code values. Conversion failures are reported on a successful job-status response."
+      ]
+    },
+    {
+      "id": "retry",
+      "title": "Retry deliberately",
+      "paragraphs": [],
+      "table": [
+        ["Response", "Action"],
+        ["400 / 413 / 415 / 422", "Correct the input or server capabilities."],
+        ["401", "Fix credentials before retrying."],
+        ["404", "Check the ID, owner, and expiration."],
+        ["409", "Poll the job before retrying download or deletion."],
+        ["429", "Wait with bounded exponential backoff and jitter."],
+        [
+          "500 or network error",
+          "Retry reads with a deadline; avoid blindly repeating uploads."
+        ]
+      ]
+    },
+    {
+      "id": "duplicates",
+      "title": "Avoid duplicate creation",
+      "paragraphs": [
+        "POST /v1/jobs has no idempotency key. A timeout may occur after a job was accepted. Do not automatically resend an upload after an ambiguous response. Keep any returned job ID."
+      ],
+      "code": "const delayMs = Math.min(1000 * 2 ** attempt, 10000);\nawait new Promise(resolve => setTimeout(resolve, delayMs + Math.random() * 250));",
+      "language": "JavaScript"
+    },
+    {
+      "id": "failed-jobs",
+      "title": "A job failure is different from an HTTP failure",
+      "paragraphs": [
+        "A status request can return 200 while the job is failed. Inspect job.status and job.error even after response.ok is true. conversion_failed means the worker failed or exceeded its timeout; conversion_interrupted indicates a durable job was running when the service restarted.",
+        "Do not repeatedly retry malformed or unsupported files. Inspect the input and installed engine first. If an infrastructure interruption caused the failure, a new submission can be appropriate after the service is healthy."
+      ]
+    },
+    {
+      "id": "budget",
+      "title": "Bound retries by count and time",
+      "paragraphs": [
+        "Use a small maximum number of attempts and an overall deadline. Jitter prevents many clients from retrying at the same instant. Stop immediately on authentication or validation errors and surface a useful message to the caller.",
+        "The SDK does not automatically retry HTTP failures. A higher-level application can wrap safe read operations with backoff. Treat ambiguous upload failures separately because POST is not idempotent."
+      ]
+    }
+  ]
+}

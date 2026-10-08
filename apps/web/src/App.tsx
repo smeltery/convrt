@@ -1,3 +1,5 @@
+import { Footer } from './components/Footer.tsx'
+import { Engines, Platforms, Developers } from './components/Product.tsx'
 import { Confetti } from './components/Confetti.tsx'
 import { Details } from './components/Details.tsx'
 import { ConversionDemo } from './components/Demo.tsx'
@@ -13,8 +15,12 @@ export function App() {
         <ConversionDemo />
         <HowItWorks />
         <Formats />
+        <Engines />
+        <Platforms />
+        <Developers />
         <Details />
       </main>
+      <Footer />
     </>
   )
 }

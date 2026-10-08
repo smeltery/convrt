@@ -1,6 +1,13 @@
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
   font-weight: 700;
   letter-spacing: -0.06em;
+}
+.brand-mark {
+  flex-shrink: 0;
+  margin-right: 8px;
 }
 .site-header {
   position: sticky;
@@ -33,6 +40,9 @@
   background: #f2f3ee;
 }
 .nav .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
   background: #eef0e8;
   color: var(--ink);
   font-size: 16px;
@@ -116,4 +126,16 @@
   color: var(--muted);
   margin-top: 16px;
   font-size: 14px;
+}
+
+.brand-icon {
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0.72;
+  vertical-align: middle;
+}
+.brand-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }

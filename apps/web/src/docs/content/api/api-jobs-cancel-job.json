@@ -1,0 +1,54 @@
+{
+  "path": "/docs/api/jobs/cancel-job",
+  "title": "Delete a job",
+  "group": "API endpoints",
+  "description": "Deletes queued or completed jobs and files with HTTP 204. Running jobs return 409. There is no /cancel endpoint and no cancelled state. Client aborts do not stop accepted conversions.",
+  "sections": [
+    {
+      "id": "request",
+      "title": "DELETE /v1/jobs/{id}",
+      "paragraphs": ["Every request requires Authorization: Bearer <key>."],
+      "code": "curl --fail-with-body -X DELETE \"$CONVRT_API_URL/v1/jobs/$JOB_ID\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\"",
+      "language": "cURL"
+    },
+    {
+      "id": "response",
+      "title": "Behavior",
+      "paragraphs": [
+        "Deletes queued or completed jobs and files with HTTP 204. Running jobs return 409. There is no /cancel endpoint and no cancelled state. Client aborts do not stop accepted conversions."
+      ],
+      "links": [
+        {
+          "label": "Lifecycle",
+          "href": "/docs/guides/job-lifecycle"
+        },
+        {
+          "label": "Errors",
+          "href": "/docs/reference/errors"
+        }
+      ]
+    },
+    {
+      "id": "states",
+      "title": "State-dependent responses",
+      "paragraphs": [
+        "Deletion immediately removes a queued or completed job and its files. It does not leave a cancelled record. Repeating the same deletion after success returns 404."
+      ],
+      "table": [
+        ["State", "Result"],
+        ["queued", "204; removed before processing."],
+        ["running", "409; worker continues."],
+        ["succeeded or failed", "204; job and files removed."],
+        ["missing or expired", "404."]
+      ]
+    },
+    {
+      "id": "cleanup",
+      "title": "Schedule cleanup after a race",
+      "paragraphs": [
+        "If the worker starts between a status read and your delete request, deletion returns 409. Wait for the terminal state and try again. This behavior also applies when your client timed out but the server is still converting.",
+        "Deleting outputs while another client is downloading can interrupt delivery. Coordinate cleanup at the application level and retain the job until all intended consumers have finished."
+      ]
+    }
+  ]
+}

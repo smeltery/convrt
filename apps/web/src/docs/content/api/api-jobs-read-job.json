@@ -1,0 +1,56 @@
+{
+  "path": "/docs/api/jobs/read-job",
+  "title": "Get a job",
+  "group": "API endpoints",
+  "description": "Returns HTTP 200 with id, status, createdAt, expiresAt, and optional error or downloadUrl. Jobs are scoped to your key. Missing, deleted, expired, or differently owned jobs return 404.",
+  "sections": [
+    {
+      "id": "request",
+      "title": "GET /v1/jobs/{id}",
+      "paragraphs": ["Every request requires Authorization: Bearer <key>."],
+      "code": "curl --fail-with-body -X GET \"$CONVRT_API_URL/v1/jobs/$JOB_ID\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\"",
+      "language": "cURL"
+    },
+    {
+      "id": "response",
+      "title": "Behavior",
+      "paragraphs": [
+        "Returns HTTP 200 with id, status, createdAt, expiresAt, and optional error or downloadUrl. Jobs are scoped to your key. Missing, deleted, expired, or differently owned jobs return 404."
+      ],
+      "links": [
+        {
+          "label": "Lifecycle",
+          "href": "/docs/guides/job-lifecycle"
+        },
+        {
+          "label": "Errors",
+          "href": "/docs/reference/errors"
+        }
+      ]
+    },
+    {
+      "id": "fields",
+      "title": "Response fields",
+      "paragraphs": [
+        "Successful reads return HTTP 200, including when the conversion itself failed. Inspect status before deciding to download."
+      ],
+      "table": [
+        ["Field", "Meaning"],
+        ["id", "Opaque job identifier."],
+        ["status", "queued, running, succeeded, or failed."],
+        ["createdAt", "ISO timestamp for acceptance."],
+        ["expiresAt", "Current ISO expiry timestamp, refreshed on completion."],
+        ["error", "Failure message, present on failed jobs."],
+        ["downloadUrl", "Relative authenticated download route after success."]
+      ]
+    },
+    {
+      "id": "polling",
+      "title": "Polling behavior",
+      "paragraphs": [
+        "Use one poll at a time with a bounded wait interval and overall deadline. Small jobs may reach succeeded before your first read. A 404 means the job is not available to this key, so polling should stop.",
+        "Status reads do not extend retention and do not trigger a retry of a failed conversion. Resubmission is a separate POST with a new job ID."
+      ]
+    }
+  ]
+}

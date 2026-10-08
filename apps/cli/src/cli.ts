@@ -1,69 +1,89 @@
 #!/usr/bin/env bun
-import { convert, ConvertError, listReadyFormats } from '@convrt/core'
+import {
+  convertBatch,
+  ConvertError,
+  formatFromPath,
+  listEngines,
+  listReadyFormats,
+  PRESETS,
+  targetsFor,
+} from '@convrt/core'
+import { parseConversion } from './args.ts'
 
 const USAGE = `convrt — convert files locally
 
 Usage:
-  convrt <input> --to <format> [--out <path>] [--quality <1-100>]
-  convrt formats
-  convrt --help
+  convrt <files or directories...> --to <format> [options]
+  convrt formats | engines | presets
+  convrt targets <file> [--menu]
+
+Options:
+  -t, --to FORMAT       Target format
+  -o, --out PATH        Single output file
+      --out-dir DIR    Output directory (preserves directory structure)
+  -r, --recursive      Include subdirectories
+  -j, --jobs 1-32      Parallel jobs (default 1)
+  -q, --quality 1-100  Output quality (default 82)
+      --width N        Maximum image/video width
+      --height N       Maximum image/video height
+      --pages 1,3-5    PDF page selection (default first page)
+      --dpi N          PDF rendering resolution (default 150)
+      --fps N          Video frame rate
+      --start SECONDS  Media start position
+      --duration SEC   Media duration
+      --mute           Remove video audio
+      --preset NAME    web, thumbnail, video, audio
+      --overwrite      Replace existing output files
+  -h, --help           Show help
+
+Conversions stay on this device. Cloud API use is separate and explicit.
 `
-
-function take(args: string[], flag: string, short: string) {
-  const i = args.findIndex((a) => a === flag || a === short)
-  if (i < 0) return undefined
-  const value = args[i + 1]
-  args.splice(i, 2)
-  return value
-}
-
-function formatBytes(n: number) {
-  if (n < 1024) return `${n} B`
-  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`
-  return `${(n / (1024 * 1024)).toFixed(2)} MB`
-}
 
 async function main() {
   const args = Bun.argv.slice(2)
   try {
-    if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+    if (!args.length || args.includes('--help') || args.includes('-h')) {
       process.stdout.write(USAGE)
       return
     }
-    if (args[0] === 'formats') {
-      for (const f of listReadyFormats()) {
+    if (args[0] === 'formats' && args.length === 1) {
+      for (const f of listReadyFormats())
         process.stdout.write(
-          `${f.id.padEnd(8)} ${f.family.padEnd(10)} ${f.engine.padEnd(8)} ${f.extensions.join(', ')}\n`,
+          `${f.id.padEnd(8)} ${f.family.padEnd(10)} ${f.engine.padEnd(8)} ${f.encode ? 'read/write' : 'read only'}\n`,
         )
-      }
       return
     }
-
-    const to = take(args, '--to', '-t')
-    const output = take(args, '--out', '-o')
-    const qualityRaw = take(args, '--quality', '-q')
-    const input = args.shift()
-    if (!input || input.startsWith('-'))
-      throw new ConvertError('missing input path')
-    if (!to) throw new ConvertError('missing --to <format>')
-    if (args.length) throw new ConvertError(`unknown argument: ${args[0]}`)
-
-    const result = await convert({
-      input,
-      to,
-      output,
-      quality: qualityRaw ? Number(qualityRaw) : undefined,
-    })
-    process.stdout.write(
-      `${result.input} → ${result.output}\n` +
-        `${formatBytes(result.bytesIn)} → ${formatBytes(result.bytesOut)} · ${(result.elapsedMs / 1000).toFixed(2)}s\n`,
-    )
+    if (args[0] === 'engines' && args.length === 1) {
+      for (const engine of await listEngines())
+        process.stdout.write(
+          `${engine.name.padEnd(8)} ${engine.available ? 'available' : 'missing'} — ${engine.detail}\n`,
+        )
+      return
+    }
+    if (args[0] === 'presets' && args.length === 1) {
+      for (const [name, preset] of Object.entries(PRESETS))
+        process.stdout.write(`${name.padEnd(12)} ${JSON.stringify(preset)}\n`)
+      return
+    }
+    if (args[0] === 'targets') {
+      if (!args[1] || args.length > 3 || (args[2] && args[2] !== '--menu'))
+        throw new ConvertError('usage: convrt targets <file> [--menu]')
+      const from = formatFromPath(args[1])
+      if (!from) throw new ConvertError('unsupported input format')
+      process.stdout.write(`${(await targetsFor(from)).join('\n')}\n`)
+      return
+    }
+    const result = await convertBatch(parseConversion(args))
+    for (const item of result.results)
+      process.stdout.write(`${item.input} → ${item.output}\n`)
+    for (const error of result.errors)
+      process.stderr.write(`convrt: ${error.message}\n`)
+    if (result.errors.length) process.exitCode = 1
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'unexpected conversion failure'
-    process.stderr.write(`convrt: ${message}\n`)
+    process.stderr.write(
+      `convrt: ${error instanceof Error ? error.message : 'conversion failed'}\n`,
+    )
     process.exitCode = 1
   }
 }
-
 await main()

@@ -22,3 +22,5 @@ apps/cli/dist/
 .flox/log
 .flox/xdg-*
 .flox/tmp
+
+apps/desktop/release/

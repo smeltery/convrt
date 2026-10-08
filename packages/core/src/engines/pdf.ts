@@ -1,4 +1,6 @@
+import { loadSharp } from './image-library.ts'
 import { dirname, join } from 'node:path'
+import type { EngineOptions } from '../options.ts'
 import { ConvertError } from '../errors.ts'
 import type { SupportedFormat } from '../formats.ts'
 import { convertWithSharp } from './sharp.ts'
@@ -13,6 +15,7 @@ const IMAGE = new Set<SupportedFormat>([
   'gif',
   'heic',
   'heif',
+  'svg',
 ])
 
 async function havePdftoppm() {
@@ -23,7 +26,8 @@ function tempBase(dir: string) {
   return join(dir, `.convrt-${process.pid}-${Date.now()}`)
 }
 
-async function pdfToImage(input: string, output: string, to: SupportedFormat) {
+async function pdfToImage(options: EngineOptions) {
+  const { input, output, to } = options
   if (!(await havePdftoppm())) {
     throw new ConvertError('pdftoppm not found on PATH; install poppler')
   }
@@ -31,7 +35,7 @@ async function pdfToImage(input: string, output: string, to: SupportedFormat) {
   const wantJpeg = to === 'jpeg' || to === 'jpg'
   const flag = wantJpeg ? '-jpeg' : '-png'
   const result =
-    await Bun.$`pdftoppm ${flag} -f 1 -l 1 -singlefile ${input} ${prefix}`
+    await Bun.$`pdftoppm ${flag} -r ${options.dpi ?? 150} -f ${options.page ?? 1} -l ${options.page ?? 1} -singlefile ${input} ${prefix}`
       .quiet()
       .nothrow()
   if (result.exitCode !== 0) {
@@ -41,19 +45,25 @@ async function pdfToImage(input: string, output: string, to: SupportedFormat) {
   if (!(await Bun.file(rendered).exists())) {
     throw new ConvertError('pdftoppm produced no page image')
   }
-  if (to === 'png' || to === 'jpeg' || to === 'jpg') {
-    await Bun.write(output, Bun.file(rendered))
-  } else {
-    await convertWithSharp({ input: rendered, output, to, quality: 82 })
-  }
+  await convertWithSharp({
+    ...options,
+    input: rendered,
+    from: wantJpeg ? 'jpeg' : 'png',
+  })
   await Bun.$`rm -f ${rendered}`.quiet().nothrow()
 }
 
-async function imageToPdf(input: string, output: string, quality: number) {
+async function imageToPdf(options: EngineOptions) {
+  const { input, output } = options
   const jpegPath = `${tempBase(dirname(output))}.jpg`
-  await convertWithSharp({ input, output: jpegPath, to: 'jpg', quality })
+  await convertWithSharp({
+    ...options,
+    input,
+    output: jpegPath,
+    to: 'jpg',
+  })
   const jpeg = new Uint8Array(await Bun.file(jpegPath).arrayBuffer())
-  const meta = await (await import('sharp')).default(jpegPath).metadata()
+  const meta = await (await loadSharp())(jpegPath).metadata()
   const width = meta.width ?? 1
   const height = meta.height ?? 1
   const enc = new TextEncoder()
@@ -99,19 +109,13 @@ async function imageToPdf(input: string, output: string, quality: number) {
   await Bun.$`rm -f ${jpegPath}`.quiet().nothrow()
 }
 
-export async function convertWithPdf(options: {
-  input: string
-  output: string
-  from: SupportedFormat
-  to: SupportedFormat
-  quality: number
-}): Promise<void> {
+export async function convertWithPdf(options: EngineOptions): Promise<void> {
   if (options.from === 'pdf' && IMAGE.has(options.to)) {
-    await pdfToImage(options.input, options.output, options.to)
+    await pdfToImage(options)
     return
   }
   if (options.to === 'pdf' && IMAGE.has(options.from)) {
-    await imageToPdf(options.input, options.output, options.quality)
+    await imageToPdf(options)
     return
   }
   throw new ConvertError(

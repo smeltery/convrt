@@ -1,0 +1,52 @@
+{
+  "path": "/docs/guides/job-lifecycle",
+  "title": "Job lifecycle",
+  "group": "Guides",
+  "description": "Understand job states, expiration, and restart behavior.",
+  "sections": [
+    {
+      "id": "states",
+      "title": "Four states",
+      "paragraphs": [],
+      "table": [
+        ["State", "Meaning"],
+        ["queued", "Accepted and waiting for a worker."],
+        ["running", "A worker is converting the input."],
+        ["succeeded", "The output is ready to download."],
+        ["failed", "The attempt failed; inspect the error field."]
+      ]
+    },
+    {
+      "id": "start",
+      "title": "Starting is automatic",
+      "paragraphs": [
+        "POST /v1/jobs uploads and queues in one request. There is no separate start request or created state. Polling may skip queued or running if a small file finishes quickly."
+      ]
+    },
+    {
+      "id": "expiry",
+      "title": "Retention and recovery",
+      "paragraphs": [
+        "The default expiry is one hour after creation and is refreshed to one hour after a conversion completes. Use expiresAt from each response as the authoritative deadline. Cleanup runs every minute. Workers have a two-minute conversion timeout.",
+        "With CONVRT_DATA_DIR configured, queued and completed jobs survive restarts. Interrupted running jobs become failed with conversion_interrupted. Without persistence, jobs disappear on shutdown."
+      ]
+    },
+    {
+      "id": "response",
+      "title": "Read the whole response",
+      "paragraphs": [
+        "createdAt records when the server accepted the job. expiresAt tells you when access is expected to expire. A downloadUrl appears only after success, and an error appears after a failed conversion. Status polling does not itself extend retention."
+      ],
+      "code": "{\n  \"id\": \"8c6a3cda-05c0-4219-925a-18c1b1347d59\",\n  \"status\": \"succeeded\",\n  \"createdAt\": \"2026-10-08T10:00:00.000Z\",\n  \"expiresAt\": \"2026-10-08T11:00:02.000Z\",\n  \"downloadUrl\": \"/v1/jobs/8c6a3cda-05c0-4219-925a-18c1b1347d59/download\"\n}",
+      "language": "JSON"
+    },
+    {
+      "id": "race-conditions",
+      "title": "Expect state changes between requests",
+      "paragraphs": [
+        "A small file may finish before your first status poll, so your client must accept succeeded immediately. Likewise, a queued job can start just before a delete request reaches the server, producing a 409. Read the current state instead of assuming the last observed state still holds.",
+        "A 404 can mean the job expired or was removed, or that the current key is not its owner. Stop polling on 404 and ask the application to resubmit only when a new conversion is intended."
+      ]
+    }
+  ]
+}

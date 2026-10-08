@@ -1,3 +1,4 @@
+import { BrandIcon } from './BrandIcon.tsx'
 import { SITE } from '../lib/site.ts'
 
 export function Header() {
@@ -8,13 +9,21 @@ export function Header() {
       </a>
       <nav className="nav" aria-label="Primary">
         <a className="brand" href="#top">
+          <img
+            className="brand-mark"
+            src="/logo.svg"
+            width="24"
+            height="24"
+            alt=""
+          />
           convrt<span aria-hidden="true">.</span>
         </a>
         <a href="#how">How it works</a>
         <a href="#formats">Formats</a>
-        <a href="#faq">FAQ</a>
+        <a href="#developers">API</a>
+        <a href="#platforms">Get convrt</a>
         <a href={SITE.github} aria-label="convrt on GitHub">
-          GitHub ↗
+          <BrandIcon name="GitHub" size={15} /> GitHub ↗
         </a>
       </nav>
     </header>
@@ -30,17 +39,19 @@ export function Hero() {
       <h1>
         New format.
         <br />
-        <em>Same file. Same Mac.</em>
+        <em>Same file. Your device.</em>
       </h1>
       <p className="hero-description">
         Convert your files with a right-click.
         <br />
-        Everything stays <span className="marker">right on your Mac.</span>
+        Desktop conversions stay <span className="marker">on your device.</span>
       </p>
-      <a className="btn btn-primary" href={SITE.install}>
+      <a className="btn btn-primary" href="#platforms">
         <span aria-hidden="true">↓</span> Get started with convrt
       </a>
-      <p className="fine">Finder Quick Action + CLI · no account needed</p>
+      <p className="fine">
+        Desktop + right-click menus + CLI · optional Cloud API
+      </p>
     </section>
   )
 }
@@ -66,7 +77,10 @@ export function HowItWorks() {
           <span>01</span>
           <div>
             <h3>Make yourself at home.</h3>
-            <p>Set up the CLI and add the convrt Quick Action to Finder.</p>
+            <p>
+              Open the desktop app, or add a right-click action to your file
+              manager.
+            </p>
           </div>
         </li>
         <li>
@@ -74,7 +88,8 @@ export function HowItWorks() {
           <div>
             <h3>Right-click. Convert.</h3>
             <p>
-              Select your file and run “Convert with convrt” from Quick Actions.
+              Select one file or a whole batch, then choose an available target
+              format.
             </p>
           </div>
         </li>
@@ -93,52 +108,4 @@ export function HowItWorks() {
   )
 }
 
-export function Formats() {
-  return (
-    <section className="section shell" id="formats">
-      <div className="section-heading">
-        <p className="eyebrow">Different files. One small tool.</p>
-        <h2>
-          For the things you <em>work with.</em>
-        </h2>
-        <p>Images, video, audio, and PDF. Converted locally.</p>
-      </div>
-      <div className="format-grid">
-        <article className="format-card">
-          <span className="format-symbol" aria-hidden="true">
-            ▧
-          </span>
-          <h3>Images</h3>
-          <p>A new format for your next idea.</p>
-          <span className="format-example">
-            PNG <span>→</span> WebP
-          </span>
-        </article>
-        <article className="format-card">
-          <span className="format-symbol" aria-hidden="true">
-            ♫
-          </span>
-          <h3>Audio & video</h3>
-          <p>Take your media into the next edit.</p>
-          <span className="format-example">
-            WAV <span>→</span> MP3
-          </span>
-        </article>
-        <article className="format-card">
-          <span className="format-symbol" aria-hidden="true">
-            ▤
-          </span>
-          <h3>PDF</h3>
-          <p>From image to page. And back.</p>
-          <span className="format-example">
-            PNG <span>↔</span> PDF
-          </span>
-        </article>
-      </div>
-      <p className="format-note">
-        PDF to image converts the first page. Audio, video, and PDF need local
-        tools. <a href={SITE.formats}>See format support ↗</a>
-      </p>
-    </section>
-  )
-}
+export { FormatCatalog as Formats } from './FormatCatalog.tsx'

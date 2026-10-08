@@ -1,0 +1,16 @@
+{
+  "name": "@convrt/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun src/server.ts",
+    "build": "tsc --noEmit -p tsconfig.json && bun ../../packages/core/scripts/build-runtime.ts src/worker.ts dist/convrt-api-worker",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "biome lint src",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@convrt/core": "workspace:*"
+  }
+}

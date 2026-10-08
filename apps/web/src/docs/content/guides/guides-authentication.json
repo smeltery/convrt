@@ -1,0 +1,44 @@
+{
+  "path": "/docs/guides/authentication",
+  "title": "Authentication",
+  "group": "Guides",
+  "description": "Configure server keys and authenticate each request.",
+  "sections": [
+    {
+      "id": "keys",
+      "title": "Create and rotate keys",
+      "paragraphs": [
+        "Set CONVRT_API_KEYS to comma-separated secrets, each at least 32 characters long. Generate a separate key for each application or environment. Restart the service when changing keys.",
+        "Job ownership is derived from the key. Keep an old key configured until its retained jobs have been downloaded or expired. Removing it immediately removes access through that key."
+      ],
+      "code": "openssl rand -hex 32",
+      "language": "Shell"
+    },
+    {
+      "id": "bearer",
+      "title": "Send a bearer token",
+      "paragraphs": [
+        "Every /v1 route requires Authorization: Bearer <key>, including formats and downloads. Missing and invalid keys return HTTP 401. GET /health is public.",
+        "Load credentials only in trusted server code. Never embed them in browser JavaScript."
+      ],
+      "code": "curl \"$CONVRT_API_URL/v1/formats\" \\\n  -H \"Authorization: Bearer $CONVRT_API_KEY\"",
+      "language": "Shell"
+    },
+    {
+      "id": "ownership",
+      "title": "Ownership follows the key",
+      "paragraphs": [
+        "All jobs created with one key share an owner. A different valid key cannot read or download those jobs; the server responds as if they do not exist. Use separate keys to separate applications or environments rather than assuming the job ID alone grants access.",
+        "If your backend serves multiple application users with one key, convrt sees one owner. Your backend must maintain its own mapping from user to job and check that mapping before allowing status, download, or deletion requests."
+      ]
+    },
+    {
+      "id": "rotation",
+      "title": "Rotate without losing access",
+      "paragraphs": [
+        "Add the replacement key to the server configuration while retaining the old key. Restart the service, send new jobs using the replacement, and finish or delete jobs belonging to the old key before removing it.",
+        "Do not place secrets in source control, client bundles, screenshots, or logs. For an exposed key, remove it from the server configuration and restart. Existing files remain subject to retention, but callers using that key can no longer access them."
+      ]
+    }
+  ]
+}

@@ -134,3 +134,14 @@
     padding-top: 0;
   }
 }
+
+.conversion-menu-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.conversion-menu-label img {
+  background: #f6f8ef;
+  border-radius: 5px;
+  padding: 2px;
+}

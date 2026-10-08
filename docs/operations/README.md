@@ -15,7 +15,7 @@ native bindings can load against the runner `libstdc++`.
 
 ## LOC budgets
 
-`scripts/file-size-budgets.json` defaults to **200 lines** per tracked source
+`scripts/file-size-budgets.json` defaults to **200 lines** per tracked or unignored source
 file. `scripts/flat-directory-budgets.json` defaults to **15** direct files per
 directory. Exceptions need an explicit entry and reason.
 
@@ -34,8 +34,10 @@ pre-commit run --all-files
 
 | Job | Purpose |
 | --- | --- |
-| `quality` | `bun run ci` through Flox on `ubuntu-latest` |
+| `quality` | `bun run ci` with host Bun and system engines on `ubuntu-latest` |
 | `hygiene` | actionlint + shellcheck + `git diff --check` |
+| `desktop` | Native packages, bundled conversion smoke tests, shell registration |
+| `API container` | Container startup, HTTP conversion, persistent results after restart |
 
 ## Releases
 
@@ -44,6 +46,11 @@ Hab-style automation:
 1. `ci` goes green on `main`.
 2. `auto-release` cuts the next `vMAJOR.MINOR.PATCH` tag when HEAD is untagged.
 3. `release` builds CLI + website artifacts and publishes a GitHub Release.
+
+CLI archives target Linux x64, macOS arm64, and Windows x64. Each archive
+contains the Bun runtime, launcher, and native image dependencies. Extract the
+whole archive together. Desktop installers are built separately with
+`bun run --filter @convrt/desktop package`; signing credentials are not bundled.
 
 ```mermaid
 flowchart LR

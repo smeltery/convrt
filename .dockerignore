@@ -1,0 +1,10 @@
+.git
+.flox
+.artifacts
+**/node_modules
+**/dist
+**/release
+**/.turbo
+.env
+.env.*
+*.log

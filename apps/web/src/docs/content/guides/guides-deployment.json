@@ -1,0 +1,109 @@
+{
+  "path": "/docs/guides/deployment",
+  "title": "Docker deployment",
+  "group": "Guides",
+  "description": "Build, configure, and operate your own convrt API with Docker Compose.",
+  "sections": [
+    {
+      "id": "requirements",
+      "title": "Before you start",
+      "paragraphs": [
+        "Install Docker Engine with Docker Compose and clone the convrt repository. Run the commands below from the repository root. This deployment runs one API instance with persistent storage and a local HTTP gateway.",
+        "Desktop and CLI conversions remain on-device. API clients explicitly upload files to this server."
+      ],
+      "code": "git clone https://github.com/smeltery/convrt.git\ncd convrt\ndocker compose version",
+      "language": "Shell"
+    },
+    {
+      "id": "api-keys",
+      "title": "Configure API keys",
+      "paragraphs": [
+        "Set CONVRT_API_KEYS to one or more comma-separated random secrets, each at least 32 characters long. For an initial deployment, generate a key with the command below. Save it in your secret manager and reuse it on subsequent starts; generating a replacement prevents callers from accessing jobs owned by the old key.",
+        "Supply keys through your shell or secret manager. Do not commit them to the repository or put them in a browser bundle."
+      ],
+      "code": "export CONVRT_API_KEYS=\"$(openssl rand -hex 32)\"",
+      "language": "Shell"
+    },
+    {
+      "id": "start",
+      "title": "Build and start",
+      "paragraphs": [
+        "Validate the configuration, build the image, and start both services. The gateway waits for the API health check before starting. The health endpoint does not require authentication; every /v1 endpoint does.",
+        "Configuration validation alone does not prove the service can start. Check the running services and health response after the build completes."
+      ],
+      "code": "docker compose -f deploy/api/compose.yaml config --quiet\ndocker compose -f deploy/api/compose.yaml up --build -d\ndocker compose -f deploy/api/compose.yaml ps\ncurl --fail http://127.0.0.1:8787/health",
+      "language": "Shell",
+      "links": [
+        {
+          "label": "Make your first conversion",
+          "href": "/docs/quick-start"
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "title": "Ports and remote access",
+      "paragraphs": [
+        "The gateway binds to 127.0.0.1:8787. Set CONVRT_PORT before starting Compose to change the host port. API clients must use that port in their base URL.",
+        "For remote access, place a trusted TLS reverse proxy in front of the gateway. Do not expose the conversion container directly. Only the gateway joins the externally connected network; the conversion network is internal."
+      ],
+      "code": "export CONVRT_PORT=8788\ndocker compose -f deploy/api/compose.yaml up -d\ncurl --fail http://127.0.0.1:8788/health",
+      "language": "Shell"
+    },
+    {
+      "id": "storage",
+      "title": "Storage and restarts",
+      "paragraphs": [
+        "The jobs volume stores the SQLite journal, uploaded files, and converted outputs. Use one API instance per volume and keep API keys stable so callers retain access to their jobs.",
+        "Queued jobs resume after a restart. Completed outputs remain downloadable until expiration. A conversion interrupted by an unexpected shutdown becomes a failed job with conversion_interrupted; submit a new job to retry it.",
+        "Jobs initially expire one hour after creation. Completion refreshes expiration to one hour after completion; cleanup runs every minute. This storage is temporary, so download outputs you need to keep."
+      ],
+      "code": "docker compose -f deploy/api/compose.yaml restart api\ndocker compose -f deploy/api/compose.yaml down",
+      "language": "Shell"
+    },
+    {
+      "id": "backups",
+      "title": "Stop and back up safely",
+      "paragraphs": [
+        "The down command preserves the jobs volume. Adding --volumes permanently deletes retained jobs and their uploaded and converted files.",
+        "Stop the API before backing up its volume so the database and files remain consistent. Protect backups as private user data and restore them with the same API keys. Set an operator-managed disk quota: Docker named volumes do not impose one automatically."
+      ]
+    },
+    {
+      "id": "resources",
+      "title": "Resource limits and isolation",
+      "paragraphs": [
+        "The conversion service runs as an unprivileged user with a read-only root filesystem, dropped capabilities, and privilege escalation disabled. Proxy access logging is disabled; keep file contents, paths, sizes, and previews out of logs.",
+        "This configuration serves a trusted operator. All jobs share a container and data volume. Public multi-tenant deployments need separate restricted workers with per-job filesystem access, customer quotas, TLS, and API-key rotation."
+      ],
+      "table": [
+        ["Resource", "Compose setting"],
+        ["CPU", "2 cores"],
+        ["Memory", "2 GiB"],
+        ["Processes", "256"],
+        ["Temporary storage", "256 MiB"],
+        ["Persistent storage", "Operator-managed jobs volume"]
+      ],
+      "links": [
+        {
+          "label": "API limits",
+          "href": "/docs/reference/limits"
+        },
+        {
+          "label": "Authentication",
+          "href": "/docs/guides/authentication"
+        }
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Check a deployment",
+      "paragraphs": [
+        "If Compose reports a missing CONVRT_API_KEYS value, export your saved key in the shell running the command. If the gateway is unavailable, check service status and wait for the API health check; also confirm the configured host port is free.",
+        "The repository\u2019s API container workflow builds this deployment, converts a fixture over HTTP, restarts the API, and verifies that the retained download still works. Running these checks requires Docker Engine."
+      ],
+      "code": "docker compose -f deploy/api/compose.yaml ps\ncurl --fail http://127.0.0.1:8787/health",
+      "language": "Shell"
+    }
+  ]
+}

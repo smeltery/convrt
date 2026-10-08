@@ -1,0 +1,47 @@
+{
+  "path": "/docs/reference/limits",
+  "title": "Limits",
+  "group": "Reference",
+  "description": "Default API capacity, lifetime, and deployment constraints.",
+  "sections": [
+    {
+      "id": "limits",
+      "title": "Defaults",
+      "paragraphs": [],
+      "table": [
+        ["Limit", "Default"],
+        ["Total multipart body", "25 MiB"],
+        ["Concurrent uploads", "4"],
+        ["Conversion workers", "2"],
+        ["Retained jobs", "100 per server"],
+        ["Worker timeout", "120 seconds"],
+        ["Retention", "1 hour; refreshed on completion"],
+        ["Cleanup interval", "1 minute"]
+      ]
+    },
+    {
+      "id": "capacity",
+      "title": "Capacity is shared",
+      "paragraphs": [
+        "These limits apply to the instance. They are not a per-account billing allowance or a requests-per-minute rate limit. Upload saturation and retained-job capacity return 429.",
+        "Docker additionally limits the service to two CPU cores, 2 GiB of memory, 256 processes, and 256 MiB of temporary storage. Durable storage needs an operator-managed quota."
+      ]
+    },
+    {
+      "id": "retention",
+      "title": "Plan for retained storage",
+      "paragraphs": [
+        "Queued jobs start with a one-hour expiry. Completion refreshes it to one hour from that point, so use the server\u2019s expiresAt field for downloads and cleanup. Deletion releases queued or completed job files sooner.",
+        "The retained-job cap includes successful and failed jobs until they are removed. An idle server can still return 429 if retained results fill that cap. Delete results after your application saves them rather than relying exclusively on expiration."
+      ]
+    },
+    {
+      "id": "upload-size",
+      "title": "Budget multipart overhead and memory",
+      "paragraphs": [
+        "25 MiB is the maximum request body, not a guaranteed 25 MiB payload allowance. Multipart headers and option fields consume part of it. Applications should set a slightly lower input-file limit and reject oversized requests while streaming.",
+        "Both the API and example clients may buffer file contents. Raising limits requires considering memory, codec behavior, temporary storage, and persistent disk capacity together. These values are service defaults, not a managed plan entitlement."
+      ]
+    }
+  ]
+}

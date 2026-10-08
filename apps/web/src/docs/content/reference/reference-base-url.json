@@ -1,0 +1,42 @@
+{
+  "path": "/docs/reference/base-url",
+  "title": "Base URL",
+  "group": "Reference",
+  "description": "Point clients at your self-hosted API gateway.",
+  "sections": [
+    {
+      "id": "local",
+      "title": "Local development",
+      "paragraphs": [
+        "The default base URL is http://127.0.0.1:8787. Docker binds its gateway to loopback. Set CONVRT_PORT to choose another gateway port. Source mode uses HOST and PORT."
+      ],
+      "code": "export CONVRT_API_URL=\"http://127.0.0.1:8787\"\ncurl \"$CONVRT_API_URL/health\"",
+      "language": "Shell"
+    },
+    {
+      "id": "remote",
+      "title": "Remote access",
+      "paragraphs": [
+        "Configure a TLS reverse proxy and use its HTTPS origin as the base URL. Keep paths under /v1. convrt does not provide a hosted API domain.",
+        "GET /health returns {\"status\":\"ok\"}; it does not verify that every conversion engine is installed."
+      ]
+    },
+    {
+      "id": "proxy",
+      "title": "Configure the gateway boundary",
+      "paragraphs": [
+        "The Docker conversion service is on an internal network and the gateway binds to 127.0.0.1. Put your trusted reverse proxy in front of that gateway when remote clients need access. Preserve Authorization and allow the configured multipart body size.",
+        "Use a dedicated API origin with HTTPS and keep proxy timeouts long enough for uploads and downloads. Job creation returns after queueing; conversion progress is retrieved through separate status calls."
+      ]
+    },
+    {
+      "id": "health",
+      "title": "What a health check proves",
+      "paragraphs": [
+        "GET /health reports that the API process can answer a request. It is useful for readiness and network diagnosis but is not a test of every codec or document engine. Run a representative fixture conversion after deployment to verify the routes your application needs."
+      ],
+      "code": "{ \"status\": \"ok\" }",
+      "language": "JSON"
+    }
+  ]
+}
