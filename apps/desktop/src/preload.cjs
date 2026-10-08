@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron')
 contextBridge.exposeInMainWorld('convrt', {
+  engineDownload: (engine) => ipcRenderer.invoke('engine-download', engine),
+  preview: (input) => ipcRenderer.invoke('preview', input),
   initial: () => ipcRenderer.invoke('initial-files'),
   pickFiles: () => ipcRenderer.invoke('pick-files'),
   pickDirectory: () => ipcRenderer.invoke('pick-directory'),

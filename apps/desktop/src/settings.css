@@ -1,0 +1,90 @@
+#options-view .settings-intro {
+  margin: 0 0 20px;
+  font-size: 12px;
+}
+.settings-group {
+  margin-bottom: 20px;
+}
+#options-view .settings-group h2 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #536347;
+  margin-bottom: 10px;
+}
+.settings-card {
+  border: 1px solid #e1e2dc;
+  border-radius: 12px;
+  background: #fcfdf8;
+  overflow: hidden;
+}
+.setting-row,
+.setting-output {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+}
+.settings-card > :not(:first-child) {
+  border-top: 1px solid #e8ebe2;
+}
+.setting-row > span,
+.setting-output > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  flex: 1;
+}
+.settings-card strong {
+  font-size: 12px;
+  font-weight: 500;
+  color: #242522;
+}
+.settings-card small,
+#options-destination {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6d7069;
+  overflow-wrap: anywhere;
+}
+.setting-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+}
+.setting-row input[type="number"] {
+  width: 64px;
+}
+.setting-output {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.setting-output button {
+  padding: 7px 9px;
+  font-size: 11px;
+}
+#options-reset-directory {
+  border-color: transparent;
+  background: transparent;
+  color: #6d7069;
+}
+#options-view .settings-format-fields {
+  margin: 12px 0 0;
+}
+.settings-format-fields:not(:has(label:not([hidden]))) {
+  display: none;
+}
+.settings-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid #e1e2dc;
+  padding-top: 16px;
+}
+#options-status {
+  margin: 0;
+  font-size: 11px;
+  color: #547846;
+}

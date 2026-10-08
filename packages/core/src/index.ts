@@ -29,3 +29,4 @@ export {
   type BatchResult,
 } from './jobs/batch.ts'
 export { inspectInputs } from './jobs/inspect.ts'
+export { previewImage } from './jobs/preview.ts'

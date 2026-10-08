@@ -1,0 +1,157 @@
+#convert-view .convert-settings,
+.output-card {
+  border: 1px solid #e1e2dc;
+  border-radius: 12px;
+  background: #fcfdf8;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+}
+#convert-view h2 {
+  font-size: 12px;
+  margin: 0 0 12px;
+  color: #536347;
+}
+#convert-view #drop {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+#convert-view #drop h2 {
+  font-size: 15px;
+  color: #242522;
+}
+#convert-view .fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#convert-view .output-card h2 {
+  margin-bottom: 8px;
+}
+.output-card .actions {
+  margin: 0;
+}
+.output-card button {
+  padding: 8px 10px;
+}
+.selection-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 11px;
+  color: #6d7069;
+}
+.selection-heading[hidden] {
+  display: none;
+}
+.selection-heading button {
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  font-size: 11px;
+}
+#files {
+  margin-top: 6px;
+}
+.engine-intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+.engine-intro h2 {
+  margin: 0;
+  font-size: 15px;
+}
+.engine-intro p {
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+#engine-status {
+  font-size: 11px;
+  color: #6d7069;
+  margin: 18px 0 10px;
+}
+.engine-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.engine-card {
+  border: 1px solid #e1e2dc;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fcfdf8;
+}
+.engine-category {
+  font-size: 10px;
+  color: #77816d;
+}
+.engine-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.engine-card h3 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 550;
+}
+.engine-state {
+  font-size: 9px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #eeeae3;
+  color: #756951;
+}
+.engine-state.available {
+  background: #e7efdf;
+  color: #456336;
+}
+.engine-card p {
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.engine-card small {
+  display: block;
+  border-top: 1px solid #e8ebe2;
+  padding-top: 10px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #6d7069;
+}
+.engine-footnote {
+  font-size: 11px;
+  margin-top: 16px;
+}
+
+.engine-install {
+  margin-top: 14px;
+  background: #e7efdf;
+  border-color: #cfddc2;
+  color: #365728;
+}
+.engine-card .engine-install-hint {
+  border: 0;
+  padding-top: 8px;
+}
+
+.engine-list {
+  display: block;
+  columns: 2;
+  column-gap: 12px;
+}
+.engine-card {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.engine-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.engine-card h3 img {
+  object-fit: contain;
+}

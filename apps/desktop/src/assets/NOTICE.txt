@@ -1,0 +1,4 @@
+Apple, Linux, GitHub, Docker, TypeScript, FFmpeg, LibreOffice, and sharp SVG icons are from Simple Icons (CC0-1.0): https://github.com/simple-icons/simple-icons
+Brand names and marks belong to their respective owners. Their use identifies supported platforms and tools and does not imply endorsement.
+
+Chat-provider identification marks reproduced from the provider menu at https://convt.app/docs/examples (ChatGPT, Claude, v0, T3 Chat, Scira, Cursor). These marks remain the property of their respective owners.

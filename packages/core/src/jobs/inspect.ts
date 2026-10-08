@@ -1,7 +1,8 @@
 import { readdir, stat } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { formatFromPath, type SupportedFormat } from '../formats.ts'
-import { targetsFor } from '../routes.ts'
+import { findRoute, targetsFor } from '../routes.ts'
+import { controlsForRoute } from './controls.ts'
 
 export async function inspectInputs(inputs: string[], recursive = false) {
   const formats = new Set<SupportedFormat>()
@@ -37,5 +38,17 @@ export async function inspectInputs(inputs: string[], recursive = false) {
     : (lists[0]?.filter((target) =>
         lists.every((list) => list.includes(target)),
       ) ?? [])
-  return { count, targets }
+  const controls: Record<string, string[]> = {}
+  for (const target of targets) {
+    const supported = await Promise.all(
+      [...formats].map(async (format) =>
+        controlsForRoute((await findRoute(format, target)) ?? []),
+      ),
+    )
+    controls[target] =
+      supported[0]?.filter((control) =>
+        supported.every((list) => list.includes(control)),
+      ) ?? []
+  }
+  return { count, targets, controls }
 }

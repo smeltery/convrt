@@ -1,0 +1,144 @@
+#drop {
+  padding: 16px;
+  border: 1px dashed #b3c1a6;
+  border-radius: 16px;
+  margin: 16px 0;
+  text-align: center;
+  background: radial-gradient(ellipse at top, #eaf0e2, #fcfdf8 80%);
+}
+#drop.is-dragging {
+  border-color: #547846;
+  background: #e5eddd;
+}
+.drop-mark {
+  display: block;
+  margin: 0 auto 8px;
+  width: 28px;
+  height: 28px;
+}
+.drop-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+#pick {
+  background: #292c26;
+  color: white;
+  border-color: #292c26;
+}
+#pick:hover {
+  background: #48543f;
+}
+#drop p {
+  font-size: 11px;
+  margin-bottom: 0;
+}
+#files {
+  max-height: 110px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  padding: 0;
+  margin: 14px 0 0;
+  list-style: none;
+  text-align: left;
+}
+#files:empty {
+  display: none;
+}
+#files li {
+  padding: 9px 12px;
+  border-top: 1px solid #e1e2dc;
+  font-size: 12px;
+}
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12px;
+  color: #626a5b;
+}
+.advanced {
+  margin-top: 12px;
+  border-bottom: 1px solid #e1e2dc;
+  padding-bottom: 12px;
+}
+.advanced .fields {
+  margin-block: 16px;
+}
+.check {
+  flex-direction: row;
+  align-items: center;
+  margin-block: 12px;
+}
+.actions {
+  margin: 12px 0;
+  font-size: 11px;
+}
+#destination {
+  overflow-wrap: anywhere;
+  color: #6d7069;
+  flex: 1;
+}
+#reset-directory {
+  background: transparent;
+  border-color: transparent;
+}
+#convert {
+  background: #547846;
+  border-color: #547846;
+  color: white;
+  width: 100%;
+  border-radius: 999px;
+  font-size: 14px;
+  padding: 14px;
+}
+#convert:hover:not(:disabled) {
+  background: #456336;
+  border-color: #456336;
+}
+#status {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#status:empty {
+  margin: 0;
+}
+.engine-details {
+  margin-top: 10px;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #6d7069;
+}
+@media (max-width: 640px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+#drop h2 {
+  margin: 8px 0 12px;
+  font-size: 15px;
+}
+#status {
+  max-height: 72px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+label[hidden] {
+  display: none;
+}

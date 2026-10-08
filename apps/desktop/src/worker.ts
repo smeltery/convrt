@@ -1,4 +1,10 @@
-import { convertBatch, inspectInputs, listEngines, PRESETS } from '@convrt/core'
+import {
+  convertBatch,
+  inspectInputs,
+  listEngines,
+  previewImage,
+  PRESETS,
+} from '@convrt/core'
 
 try {
   const request = JSON.parse(await Bun.stdin.text())
@@ -11,6 +17,8 @@ try {
         presets: PRESETS,
       }),
     )
+  } else if (request.action === 'preview') {
+    process.stdout.write(JSON.stringify(await previewImage(request.input)))
   } else if (request.action === 'convert') {
     process.stdout.write(JSON.stringify(await convertBatch(request.options)))
   } else throw new Error('unknown action')

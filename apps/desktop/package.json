@@ -27,7 +27,8 @@
       "src/*.cjs",
       "src/*.html",
       "src/*.css",
-      "src/*.js"
+      "src/*.js",
+      "src/assets/*"
     ],
     "extraResources": [
       {
@@ -43,17 +44,20 @@
       }
     ],
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "build/icon.icns"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "linux": {
       "target": [
         "AppImage",
         "deb"
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "icon": "src/assets/icon.png"
     }
   },
   "description": "Local file conversion for desktop and shell menus"

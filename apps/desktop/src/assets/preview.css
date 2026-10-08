@@ -1,0 +1,93 @@
+#drop:has(#files li) {
+  text-align: left;
+}
+#drop:has(#files li) h2,
+#drop:has(#files li) > p {
+  display: none;
+}
+#drop:has(#files li) .drop-buttons {
+  justify-content: flex-end;
+}
+#drop:has(#files li) .drop-buttons button {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+#drop:has(#files li) .selection-heading {
+  margin-top: 8px;
+}
+.selected-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#file-preview {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  margin-top: 8px;
+  border: 1px solid #dce2d4;
+  border-radius: 9px;
+  background: #f6f6f3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+#file-preview[hidden],
+#preview-image[hidden],
+#preview-fallback[hidden] {
+  display: none;
+}
+#preview-image {
+  max-width: 100%;
+  max-height: 64px;
+  object-fit: contain;
+}
+#preview-fallback {
+  font-size: 8px;
+  color: #77816d;
+}
+.selected-content #files {
+  flex: 1;
+  min-width: 0;
+  max-height: 76px;
+}
+.selected-content #files li:first-child {
+  border-top: 0;
+}
+
+#preview-details {
+  font-size: 10px;
+  color: #6d7069;
+  margin-top: 8px;
+}
+#preview-audio {
+  display: block;
+  width: 100%;
+  height: 32px;
+  margin-top: 8px;
+}
+#preview-details[hidden],
+#preview-audio[hidden] {
+  display: none;
+}
+
+.conversion-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+#status:not(:empty) {
+  padding: 12px 14px;
+  border: 1px solid #dce2d4;
+  border-radius: 9px;
+  background: #edf3e6;
+  max-height: 120px;
+}
+#status[data-state="error"] {
+  background: #faf0e9;
+  border-color: #e4c8b8;
+  color: #85462e;
+}

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron')
 const { spawn } = require('node:child_process')
 const { join, delimiter } = require('node:path')
 if (process.platform === 'darwin')
@@ -62,6 +62,19 @@ else {
     window?.webContents.send('files', pending)
   })
   app.whenReady().then(() => {
+    ipcMain.handle('engine-download', async (_event, engine) => {
+      const urls = {
+        ffmpeg: 'https://ffmpeg.org/download.html',
+        office: 'https://www.libreoffice.org/download/',
+        pdf: 'https://poppler.freedesktop.org/',
+        sharp: 'https://github.com/smeltery/convrt/releases',
+      }
+      if (!Object.hasOwn(urls, engine)) throw new Error('Unknown engine')
+      await shell.openExternal(urls[engine])
+    })
+    ipcMain.handle('preview', (_event, input) =>
+      runWorker({ action: 'preview', input }),
+    )
     ipcMain.handle('initial-files', () => pending)
     ipcMain.handle(
       'pick-files',
@@ -102,11 +115,18 @@ else {
         busy = false
       }
     })
+    if (process.platform === 'darwin')
+      app.dock.setIcon(join(__dirname, 'assets', 'icon.png'))
     window = new BrowserWindow({
       width: 820,
-      height: 760,
+      height: 550,
+      resizable: false,
+      maximizable: false,
+      fullscreenable: false,
+      backgroundColor: '#f6f6f3',
+      icon: join(__dirname, 'assets', 'icon.png'),
       minWidth: 620,
-      minHeight: 600,
+      minHeight: 520,
       webPreferences: {
         preload: join(__dirname, 'preload.cjs'),
         contextIsolation: true,

@@ -1,0 +1,115 @@
+body {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  min-height: 100dvh;
+}
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: 24px 12px 16px;
+  background: #eef0e9;
+  border-right: 1px solid #dfe3d8;
+  display: flex;
+  flex-direction: column;
+}
+.app-sidebar .brand {
+  font-size: 22px;
+  padding: 0 10px 28px;
+}
+.app-sidebar nav {
+  display: grid;
+  gap: 4px;
+}
+.app-sidebar button {
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+}
+.app-sidebar button[aria-current] {
+  background: #dfe7d6;
+  color: #365728;
+}
+.sidebar-note {
+  margin-top: auto;
+  padding: 12px 10px 0;
+  font-size: 11px;
+}
+body main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+main .toolbar {
+  height: 60px;
+  padding: 0 24px;
+  border-bottom: 1px solid #e1e2dc;
+}
+.toolbar h1 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+.app-view {
+  padding: 20px 24px;
+}
+.app-view[hidden] {
+  display: none;
+}
+.app-view #drop {
+  margin: 0 0 24px;
+  padding: 24px 16px;
+}
+.app-view #convert {
+  border-radius: 9px;
+}
+#options-view .fields {
+  margin-block: 20px;
+}
+@media (max-width: 700px) {
+  body {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .app-view {
+    padding: 16px;
+  }
+  .app-view .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  main .toolbar {
+    padding: 0 16px;
+  }
+  .toolbar .badge {
+    font-size: 8px;
+  }
+}
+body {
+  height: 100dvh;
+  overflow: hidden;
+}
+body main {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+main .toolbar {
+  flex-shrink: 0;
+}
+.app-view {
+  min-height: 0;
+  overflow-y: auto;
+}
+#options-view h2 {
+  margin: 0 0 8px;
+}
+#options-view .option-help {
+  font-size: 11px;
+  margin: 4px 0 16px;
+}
+#options-view .actions {
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
